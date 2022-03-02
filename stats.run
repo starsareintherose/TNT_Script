@@ -1,0 +1,23 @@
+macro= ;
+report- ;
+var =
+   0 themin
+   1 themax
+   + CIs [ ( ntrees + 1 ) ]
+   + RIs [ ( ntrees + 1 ) ]
+   + this
+;
+set themin minsteps ;
+set themax maxsteps ;
+loop 0 ntrees
+   progress #1 (ntrees+1) Calculating indices... ;
+   set this length[#1] ;
+   set CIs[#1] 'themin'/'this' ;
+   set RIs[#1] ('themax'-'this')/('themax'-'themin') ;
+   stop
+progress/ ;
+report= ;
+macfloat 3 ;
+maketable CIs Consistency index ;
+maketable RIs Retention index ;
+proc/ ;
