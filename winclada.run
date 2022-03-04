@@ -1,0 +1,24 @@
+mxram 10240 ;
+nstates 32 ;
+nstates NOGAPS ;
+
+piwe=12;
+
+procedure mor.tnt ;
+log winclada.log ;
+
+hold 100000 ;
+xpiwe(*; mult=replic 100 tbr hold 1000;
+xpiwe&; piwe&;
+export= treeswc.tre ;
+
+bbreak=tbr ;
+majority * ;
+
+resample boot replications 1000;
+export= btwc.tre ;
+
+length * ;
+stats.run;
+
+quit ;
