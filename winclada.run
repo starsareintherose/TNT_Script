@@ -8,7 +8,7 @@ procedure mor.tnt ;
 log winclada.log ;
 
 hold 100000 ;
-xpiwe(*; mult=replic 100 tbr hold 1000;
+xpiwe(*; mult=replic 1000 tbr hold 10;
 xpiwe&; piwe&;
 export= treeswc.tre ;
 
