@@ -12,6 +12,9 @@ hold 100000 ;
 xpiwe(*; mult=replic 1000 tbr hold 10;
 xpiwe&; piwe&;
 export= trees.tre ;
+taxname- ;
+export= trees_no.tre ;
+taxname= ;
 
 bbreak=tbr ;
 majority * ;
@@ -20,6 +23,8 @@ ttags= ;
 resample boot replications 1000;
 ttags & bt.svg thickness 7 italics fontsize 15;
 export < bt.tre ;
+taxname- ;
+export - bt_no.tre;
 
 length * ;
 stats.run;
