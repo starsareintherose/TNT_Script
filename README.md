@@ -4,11 +4,19 @@ These scripts follow MIT except for setk.run which belongs to Salvador Arias(Ins
 
 ## Usage
 
+### Method1
+
 - OS: Arch Linux;
 
 - `tnt run guoyi.run file.tnt`, `file.tnt` is your data;
 
 - Type `;` and enter;
+
+### Method2
+
+- Replace `%1` to your filename;
+
+- Run `tnt p guoyi.run` directly;
 
 ## Options
 

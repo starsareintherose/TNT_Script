@@ -12,7 +12,7 @@ procedure %1;
 hold 1000;
 xpiwe(*;
 mult=replic 1000 tbr hold 1;
-xpiwe&;piwe&;
+piwe&;
 export= trees.tre;
 taxname-;
 export= trees_no.tre;
