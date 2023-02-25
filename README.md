@@ -14,7 +14,7 @@ These scripts follow MIT except for setk.run which belongs to Salvador Arias(Ins
 
 ### Method2
 
-- Replace `%1` to your filename;
+- Replace `%1` with your filename;
 
 - Run `tnt p guoyi.run` directly;
 
