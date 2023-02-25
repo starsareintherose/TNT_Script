@@ -1,0 +1,33 @@
+log tnt.log;
+macro=;
+taxname=;
+mxram 10240;
+nstates 32;
+nstates NOGAPS;
+
+procedure %1;
+setk.run;
+
+procedure %1;
+hold 1000;
+xpiwe(*;
+mult=replic 1000 tbr hold 1;
+xpiwe&;piwe&;
+export= trees.tre;
+taxname-;
+export= trees_no.tre;
+taxname=;
+
+bbreak=tbr;
+majority *;
+
+ttags=;
+resample boot replications 1000;
+ttags & bt.svg thickness 7 italics fontsize 15;
+export < bt.tre;
+taxname-;
+export - bt_no.tre;
+
+length *;
+stats.run;
+quit ;

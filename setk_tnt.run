@@ -1,4 +1,0 @@
-log setk.log;
-p file.tnt;
-setk.run;
-quit;
