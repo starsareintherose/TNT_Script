@@ -26,9 +26,11 @@ This script follows MIT and part of script is from setk.run belonging to Salvado
 
 - Results instructions are at the end of `tnt.log`.
 
-- `con.tre`, `con.tre` are trees with taxaname.
+- `trees.tre`, `con.tre` are trees with taxaname.
 
-- `trees_no.tre`, `bt_no.tre` are trees without taxaname which can be put into Winclada with the `file.tnt`.
+- `trees_no.tre`, `con_no.tre` are trees without taxaname.
+
+- `con_no.tre` can be put into Winclada with your tnt matrix file `filename`.
 
 - `nelsen` can be replaced by `majority`.
 
