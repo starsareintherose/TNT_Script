@@ -1,6 +1,6 @@
 # TNT Script used by Guoyi
 
-These scripts follow MIT, part of script is from setk.run belonging to Salvador Arias (Instituto Miguel Lillo, San Miguel de Tucumán, Argentina).
+This script follows MIT and part of script is from setk.run belonging to Salvador Arias (Instituto Miguel Lillo, San Miguel de Tucumán, Argentina).
 
 ## Usage
 
