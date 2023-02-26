@@ -4,7 +4,7 @@ This script follows MIT and part of script is from setk.run belonging to Salvado
 
 ## Usage
 
-- Place this script and your tnt matrix under the folder that you call `tnt` or `exe` file is placed 
+- Place this script and your matrix tnt file `filename` under the folder that you call `tnt` or `exe` file is placed
 
 - Enter `tnt`
 
