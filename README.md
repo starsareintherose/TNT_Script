@@ -12,7 +12,7 @@ This script follows MIT and part of script is from setk.run belonging to Salvado
 
 ## Functions
 
-- Estimated implied weighting K value.      
+- Estimate implied weighting K value.      
 
 - Search trees via TBR Mult and Xmult.     
 
