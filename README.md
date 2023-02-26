@@ -1,30 +1,36 @@
 # TNT Script used by Guoyi
 
-These scripts follow MIT except for setk.run which belongs to Salvador Arias (Instituto Miguel Lillo, San Miguel de Tucumán, Argentina).
+These scripts follow MIT, part of script is from setk.run belonging to Salvador Arias (Instituto Miguel Lillo, San Miguel de Tucumán, Argentina).
 
 ## Usage
 
-### Method1
+- Place this script and your tnt matrix under the folder that you call `tnt` or `exe` file is placed 
 
-- OS: Arch Linux;
+- Enter `tnt`
 
-- `tnt run guoyi.run file.tnt`, `file.tnt` is your data;
+- Enter command `guoyi filename;`
 
-- Type `;` and enter;
+## Functions
 
-### Method2
+- Estimated implied weighting K value.      
 
-- Replace `%1` with your filename;
+- Search trees via TBR Mult and Xmult.     
 
-- Run `tnt p guoyi.run` directly;
+- Perform Strict consensus.            
+
+- Calculate Relative Bremer support, jackknifing, and bootstrap.
+
+- Calculate TL, CI, and RI. 
 
 ## Options
 
-- `trees.tre`, `bt.tre` are trees with taxaname;
+- Results instructions are at the end of `tnt.log`.
 
-- `trees_no.tre`, `bt_no.tre` are trees without taxaname which can be put into Winclada with the `file.tnt`;
+- `con.tre`, `con.tre` are trees with taxaname.
 
-- `majority` can be replaced by `nelsen`;
+- `trees_no.tre`, `bt_no.tre` are trees without taxaname which can be put into Winclada with the `file.tnt`.
 
-- `boot` can be replaced by `jack`;
+- `nelsen` can be replaced by `majority`.
+
+- `xmult` and `mult` replications and hold trees number can be adjusted.
 
