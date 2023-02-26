@@ -155,7 +155,6 @@ macfloat 3;
 maketable CIs Consistency index;
 maketable RIs Retention index;
 
-
 /*Report*/
 quote -         /----------------------------------------------\;
 quote -         |      The analysis has been finished.         |;
