@@ -157,7 +157,6 @@ maketable RIs Retention index;
 
 
 /*Report*/
-
 quote -         /----------------------------------------------\;
 quote -         |      The analysis has been finished.         |;
 quote -         |      The file `tnt.log` contains             |;
