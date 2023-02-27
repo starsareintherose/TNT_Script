@@ -1,5 +1,6 @@
 log tnt.log;
 macro=;
+taxname+1000;
 taxname=;
 mxram 10240;
 nstates 32;
@@ -22,7 +23,9 @@ quote -   |    Implied weighting will be estimated.        |;
 quote -   |    TBR Mult and Xmult will be performed.       |;
 quote -   |    Strict consensus will be used.              |;
 quote -   |    Relative bremer support, jackknifing and    |;
-quote -   |        bootstrap will be shown on the svg.     |;
+quote -   |        bootstrap will be shown on the con.svg. |;
+quote -   |    Apomorphic characters mapping will be shown |;
+quote -   |        on the apo.svg and saved to apo*.tre.   |;
 quote -   |    TL, CI and RI will be calculated finally.   |;
 quote -   \------------------------------------------------/;
 
@@ -40,11 +43,10 @@ var:
  maxIts
 ;
 if (ntax<0)
-  quote NO HAY DATOS!;
+  quote There is no data;
   proc/;
 end
-set gVal 1;
-/** busca el valor de g **/
+/** find the value of g **/
 loop 0 nchar
   if (!isinfo[#1]) continue; end
   if (!isact[#1]) continue; end
@@ -54,21 +56,21 @@ loop 0 nchar
     set gVal 'a'-'b';
   end
 stop
-quote valor de g = 'gVal';
+quote g value: 'gVal';
 set actK 10;
 set minK 0;
-set maxK 500; /** Asume 500 como el maximo posible valor de K **/
+set maxK 500; /** Assume 500 as the maximum possible value of K **/
 set maxIts 0;
-/** busca el mejor valor de K **/
+/** find the best value of K **/
 loop 0 1
-  quote actual valor de k = 'actK';
+  quote actual k value: 'actK';
   set a 1-('actK'/('actK'+1));
   quote 'a';
   set b ('actK'/('actK'+'gVal'-1))-('actK'/('actK'+'gVal'));
   quote 'b';
   set Nval 'a'/'b';
-  quote valor de N = 'Nval';
-  if (('Nval'>14.8)&&('Nval'<15.2)) endloop; end /** N esta en el rango **/
+  quote N value: 'Nval';
+  if (('Nval'>14.8)&&('Nval'<15.2)) endloop; end /** N is in range **/
   if ('Nval'>15.2)
     set minK 'actK';
   else
@@ -77,16 +79,16 @@ loop 0 1
   set a ('maxK'-'minK')/2;
   set actK 'minK' + 'a';
   set maxIts ++;
-  if ('maxIts'==100) endloop; end /** salida de emergencia **/
+  if ('maxIts'==100) endloop; end /** emergency exit **/
   setloop 0;
 stop
-/** Si salio de emergencia **/
+/** If out of emergency **/
 if ('maxIts'==100)
-  quote NO SE TERMINARON LAS ITERACIONES;
-  quote mejor K encontrado: 'actK';
+  quote Iterations are not finished;
+  quote Best K is 'actK';
   proc /;
 end
-quote Valor de K: 'actK' (N='Nval');
+quote K value: 'actK' (N='Nval');
 piwe='actK';
 
 /*Reopen tnt*/
@@ -130,6 +132,18 @@ export < con.tre;
 taxname-;
 export - con_no.tre;
 
+/*Apomorphic characters*/
+export = winclada.tre;
+taxname =;
+ttags-;
+ttags=;
+apo >0;
+ttags & apo.svg thickness 7 italics fontsize 15;
+export < apo.tre;
+taxname-;
+export - apo_no.tre;
+ttags-;
+
 /*Caulculate TL/CI/RI score*/
 length *;
 report-;
@@ -164,12 +178,18 @@ quote -         |      The file `trees*.tre` contain           |;
 quote -         |          trees found by mult and xmult       |;
 quote -         |      The file `con*.tre` contain             |;
 quote -         |          strict consensus tree               |;
+quote -         |      The file `apo*.tre` contain             |;
+quote -         |          tree with apomorphic character      |;
 quote -         |      The file `*_no.tre` contain             |;
 quote -         |          tree with `taxaname-`               |;
 quote -         |      The file `con.svg` contain              |;
 quote -         |          strict consensus tree with          |;
 quote -         |          relative bremer, jak and boot       |;
 quote -         |          support on the tree                 |;
+quote -         |      The file `apo.svg` contain the          |;
+quote -         |          tree with apomorphy mapping         |;
+quote -         |      The file `winclada.tre` can be          |;
+quote -         |          converted by tnt2winclada           |;
 quote -         \----------------------------------------------/;
 
 /*Quit*/
