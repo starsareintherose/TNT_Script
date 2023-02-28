@@ -18,40 +18,34 @@ void show_help (int help_num){
 if (help_num == 0) {
 	cout << "~|~|\\ |~|~  ~)  |    |o._ |~| _  _| _ " << endl;
 	cout << " | | \\| |   /_   \\/\\/ || ||_|(_|(_|(_|" << endl;
-	cout  << "TNT2WinClada MIT\nplease use -h to see more help" << endl;
+	cout  << "TNT2WinClada\nMIT, Guoyi Zhang, 2023\nplease use -h to see more options" << endl;
 	} else {
 		cout << "~|~|\\ |~|~  ~)  |    |o._ |~| _  _| _ " << endl;
 		cout << " | | \\| |   /_   \\/\\/ || ||_|(_|(_|(_|" << endl;
-		cout << "-h help;\n-i input: -i ${input_file};\n-o output: -o ${output_file}" << endl;
+		cout << "Usage: tnt2winclada -i ${input_file} -o ${output_file}\n-h help;\n-i input: -i ${input_file};\n-o output: -o ${output_file}" << endl;
 	}
 }
 
 void argument(int argc, char **argv) {
 	// -i -h -o option
-	int x=0, y = 0, z=0;
 	for (int i = 0; i < argc; i++) {
 		if (argc == 2 && string(argv[1]) == "-h") {
 			show_help(1);
-			x++;
-			return;
+			exit(0);
 		}
 		if (argc != 5 || string(argv[1]) != "-i" || string(argv[3]) != "-o") {
+			cout << "input or output can't be empty." << endl;
 			show_help(0);
-			return;
+			exit(0);
 		}
 		if (string(argv[i]) == "-i") {
 			i++;
 			inputFileName = argv[i];
-			y++;
 		}
 		if (string(argv[i]) == "-o") {
 			i++;
 			outputFileName = argv[i];
-			z++;
 		}
-	}
-	if (x==0 && (y==0 || z==0)) {
-		cout << "input or output can't be empty." << endl;
 	}
 }
 
