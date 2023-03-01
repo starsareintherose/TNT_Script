@@ -105,7 +105,9 @@ void parse_line (int trelen) {
 void write_winclada() {
 	ofstream outputFile(outputFileName);
 	if (outputFile.is_open()) {
-		outputFile << winclada_format;
+		outputFile << "tread" << endl;
+		outputFile << winclada_format << endl;
+		outputFile << "proc-;" ;
 	} else {
 		cout << "File can't be written" << endl;
 	}
