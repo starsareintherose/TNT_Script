@@ -28,9 +28,9 @@ The TNT script follows MIT and part of script is from setk.run belonging to Salv
 
 - Results instructions are at the end of `tnt.log`.
 
-- `trees.tre`, `con.tre` are trees with taxname.
+- `trees.tre`, `resample.tre` are trees with taxname.
 
-- `trees_no.tre`, `con_no.tre` are trees without taxname.
+- `trees_no.tre`, `resample_no.tre` are trees without taxname.
 
 - `nelsen` can be replaced by `majority`.
 

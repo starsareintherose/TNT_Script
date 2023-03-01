@@ -23,7 +23,7 @@ quote -   |    Implied weighting will be estimated.        |;
 quote -   |    TBR Mult and Xmult will be performed.       |;
 quote -   |    Strict consensus will be used.              |;
 quote -   |    Relative bremer support, jackknifing and    |;
-quote -   |        bootstrap will be shown on the con.svg. |;
+quote -   |        boot will be shown on the resample.svg. |;
 quote -   |    Apomorphic characters mapping will be shown |;
 quote -   |        on the apo.svg and saved to apo*.tre.   |;
 quote -   |    TL, CI and RI will be calculated finally.   |;
@@ -127,10 +127,10 @@ resample jak replications 1000;
 resample boot replications 1000;
 
 /*Export consensus tree with supports*/
-ttags & con.svg thickness 7 italics fontsize 15;
-export < con.tre;
+ttags & resample.svg thickness 7 italics fontsize 15;
+export < resample.tre;
 taxname-;
-export - con_no.tre;
+export - resample_no.tre;
 
 /*Apomorphic characters*/
 export = winclada.tre;
@@ -176,13 +176,13 @@ quote -         |      The file `tnt.log` contains             |;
 quote -         |          K, TL, CI and RI                    |;
 quote -         |      The file `trees*.tre` contain           |;
 quote -         |          trees found by mult and xmult       |;
-quote -         |      The file `con*.tre` contain             |;
+quote -         |      The file `resample*.tre` contain        |;
 quote -         |          strict consensus tree               |;
 quote -         |      The file `apo*.tre` contain             |;
 quote -         |          tree with apomorphic character      |;
 quote -         |      The file `*_no.tre` contain             |;
 quote -         |          tree with `taxaname-`               |;
-quote -         |      The file `con.svg` contain              |;
+quote -         |      The file `resample.svg` contain         |;
 quote -         |          strict consensus tree with          |;
 quote -         |          relative bremer, jak and boot       |;
 quote -         |          support on the tree                 |;
