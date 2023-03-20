@@ -66,7 +66,7 @@ int read_tnt() {
 void add_space (char x) {
 	int i = 0;
 	string winclada;
-	for (i=0; i<tnt_format.length(); i++) {
+	for (i=0; i<(int)tnt_format.length(); i++) {
 		if (tnt_format[i] != x) {
 			winclada=winclada+tnt_format[i];
 		} else {
