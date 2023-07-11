@@ -12,7 +12,7 @@ if ( argnumber != 1 )
   quote -   /-----------------------------------------------\;
   quote -   |        GUOYI TNT SCRIPT 2022-2023 MIT         |;
   quote -   |        You need to give your filename         |;
-  quote -   |           tnt*> guoyi filename;               |;
+  quote -   |           tnt*> guoyi filename                |;
   quote -   \-----------------------------------------------/;
   proc/; 
 end
