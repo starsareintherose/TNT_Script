@@ -14,11 +14,11 @@ The TNT script follows MIT and part of script is from setk.run belonging to Salv
 
 - Estimate implied weighting K value.      
 
-- Search trees via TBR Mult and Xmult.     
+- Search trees via TBR Mult (1000 times) and Xmult (use random sectorial searches, produce 1,000 hits to best length and stop, 10 cycles of drifting, ratchet and fusing).      
 
 - Perform Strict consensus.            
 
-- Calculate Relative Bremer support, jackknifing, and bootstrap.
+- Calculate Relative Bremer support, jackknifing (1,000 times), and bootstrap (1,000 times).
 
 - Map apomorphic characters on the consensus tree.
 
@@ -37,6 +37,10 @@ The TNT script follows MIT and part of script is from setk.run belonging to Salv
 - `xmult` and `mult` replications and hold trees number can be adjusted.
 
 - `winclada.tre` can be transferred to the acceptable format for WinClada by tnt2winclada and the output file can be put into Winclada with your tnt matrix file `filename` for mapping apomorphic characters and homoplasy.
+
+## Cite
+
+Cite this script is mandatory, list me (Guoyi Zhang) in your Acknowledgements is recommended.
 
 # TNT2WinClada
 
@@ -76,3 +80,5 @@ cl /EHsc tnt2winclada.cpp
 ```
 tnt2winclada -i ${input_file} -o ${output_file}
 ```
+
+Interactive commands are also available.
