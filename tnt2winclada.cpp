@@ -45,7 +45,7 @@ void interactive_commands()
 				     << endl;
 			}
 			else {
-				ifstream infile(filename1.c_str());
+				ifstream infile(filename1);
 				if (infile.good()) {
 					inputFileName = filename1;
 					cout << "tnt2winclada> Input file set "
@@ -79,7 +79,7 @@ void interactive_commands()
 				     << endl;
 			}
 			else {
-				ofstream outfile(filename2.c_str());
+				ofstream outfile(filename2);
 				outputFileName = filename2;
 				cout << "tnt2winclada> Output file set to "
 				     << filename2 << endl;
