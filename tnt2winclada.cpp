@@ -32,8 +32,8 @@ void interactive_commands()
 				"help\ninput "
 				"<filename>\tinput a TNT output tree from the "
 				"specified file\noutput <filename>\toutput a "
-				"winclada accessable tree file\nquit\t\t\texit "
-				"the program"
+				"winclada accessable tree file\nquit\t\t\tquit "
+				"the program\nexit\t\t\texit the program"
 			     << endl;
 		}
 		else if (command.find("input ") == 0) {
@@ -87,7 +87,7 @@ void interactive_commands()
 				cout << "tnt2winclada> Finished." << endl;
 			}
 		}
-		else if (command == "quit") {
+		else if (command == "quit" || command == "exit") {
 			break;
 		}
 		else {
