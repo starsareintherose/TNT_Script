@@ -32,7 +32,7 @@ void interactive_commands()
 				"help\ninput "
 				"<filename>\tinput a TNT output tree from the "
 				"specified file\noutput <filename>\toutput a "
-				"winclada accessable tree file\nquit\t\t\tquit "
+				"winclada accessible tree file\nquit\t\t\tquit "
 				"the program\nexit\t\t\texit the program"
 			     << endl;
 		}
