@@ -93,13 +93,13 @@ piwe='actK';
 
 /*Reopen tnt*/
 procedure %1;
-hold 5000;
+hold 10000;
 
 /*Search trees*/
 xpiwe(*;
-mult=replic 1000 tbr hold 10;
+mult=replic 1000 tbr hold 100;
 sect: slack 1000; 
-xmult=rss hit 1000 drift 10 ratchet 10 fuse 10;
+xmult=hit 1000 noupdate replic 10 drift 10 ratchet 10 fuse 10 hold 1 keepall;
 piwe&;
 
 /*Export trees*/
