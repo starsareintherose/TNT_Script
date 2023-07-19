@@ -97,9 +97,9 @@ hold 10000;
 
 /*Search trees*/
 xpiwe(*;
-mult=replic 1000 tbr hold 100;
+mult=replic 1000 tbr hold 1000;
 sect: slack 1000; 
-xmult=hit 1000 noupdate replic 10 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+xmult=hit 1000 noupdate replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
 piwe&;
 
 /*Export trees*/
@@ -107,12 +107,24 @@ export= trees.tre;
 taxname-;
 export= trees_no.tre;
 taxname=;
+tsave = trees.ctf;
+tsave *= trees.tnt.tre;
 
 /*Consensus tree*/
 bbreak=tbr;
 nelsen *;
+tchoose/;
+
+/*Export consensus tree*/
+export - original.tre;
+taxname-;
+export - original_no.tre;
+taxname=;
+tsave = original.ctf;
+tsave *= original.tnt.tre;
 
 /*Get Bremer/jak/boot support*/
+tchoose/;
 ttags=;
 sub 1; hold +1000; bbreak=fill;
 sub 2; hold +2000; bbreak=fill;
@@ -128,6 +140,11 @@ resample boot replications 1000;
 
 /*Export consensus tree with supports*/
 ttags & resample.svg thickness 7 italics fontsize 15;
+quote -         /----------------------------------------------\;
+quote -                       resample tags start               ;
+ttags/;
+quote -                       resample tags stop                ;
+quote -         \----------------------------------------------/;
 export < resample.tre;
 taxname-;
 export - resample_no.tre;
@@ -138,6 +155,11 @@ taxname =;
 ttags-;
 ttags=;
 apo >0;
+quote -         /----------------------------------------------\;
+quote -                     apomorphy tags start                ;
+ttags/;
+quote -                     apomorphy tags stop                 ;
+quote -         \----------------------------------------------/;
 ttags & apo.svg thickness 7 italics fontsize 15;
 export < apo.tre;
 taxname-;
@@ -176,12 +198,18 @@ quote -         |      The file `tnt.log` contains             |;
 quote -         |          K, TL, CI and RI                    |;
 quote -         |      The file `trees*.tre` contain           |;
 quote -         |          trees found by mult and xmult       |;
+quote -         |      The file `original*.tre` contain        |;
+quote -         |          strict consensus tree without label |;
 quote -         |      The file `resample*.tre` contain        |;
-quote -         |          strict consensus tree               |;
+quote -         |          consensus tree with support         |;
 quote -         |      The file `apo*.tre` contain             |;
 quote -         |          tree with apomorphic character      |;
 quote -         |      The file `*_no.tre` contain             |;
 quote -         |          tree with `taxaname-`               |;
+quote -         |      The file `*.ctf` tree file is           |;
+quote -         |          only readable for TNT               |;
+quote -         |      The file `*.tnt.tre` contain            |;
+quote -         |          is the ctf file with taxname        |;
 quote -         |      The file `resample.svg` contain         |;
 quote -         |          strict consensus tree with          |;
 quote -         |          relative bremer, jak and boot       |;
