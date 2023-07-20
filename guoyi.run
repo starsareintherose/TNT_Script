@@ -113,15 +113,31 @@ tsave *= trees.tnt.tre;
 /*Consensus tree*/
 bbreak=tbr;
 nelsen *;
-tchoose/;
 
 /*Export consensus tree*/
+tchoose/;
 export - original.tre;
 taxname-;
 export - original_no.tre;
-taxname=;
 tsave = original.ctf;
 tsave *= original.tnt.tre;
+
+/*Apomorphic characters*/
+tchoose/;
+export = winclada.tre;
+taxname =;
+ttags=;
+apo >0;
+quote -         /----------------------------------------------\;
+quote -                     apomorphy tags start                ;
+ttags/;
+quote -                     apomorphy tags stop                 ;
+quote -         \----------------------------------------------/;
+ttags & apo.svg thickness 7 italics fontsize 15;
+export < apo.tre;
+taxname-;
+export - apo_no.tre;
+ttags-;
 
 /*Get Bremer/jak/boot support*/
 tchoose/;
@@ -148,22 +164,6 @@ quote -         \----------------------------------------------/;
 export < resample.tre;
 taxname-;
 export - resample_no.tre;
-
-/*Apomorphic characters*/
-export = winclada.tre;
-taxname =;
-ttags-;
-ttags=;
-apo >0;
-quote -         /----------------------------------------------\;
-quote -                     apomorphy tags start                ;
-ttags/;
-quote -                     apomorphy tags stop                 ;
-quote -         \----------------------------------------------/;
-ttags & apo.svg thickness 7 italics fontsize 15;
-export < apo.tre;
-taxname-;
-export - apo_no.tre;
 ttags-;
 
 /*Caulculate TL/CI/RI score*/
@@ -205,7 +205,7 @@ quote -         |          consensus tree with support         |;
 quote -         |      The file `apo*.tre` contain             |;
 quote -         |          tree with apomorphic character      |;
 quote -         |      The file `*_no.tre` contain             |;
-quote -         |          tree with `taxaname-`               |;
+quote -         |          tree with `taxname-`                |;
 quote -         |      The file `*.ctf` tree file is           |;
 quote -         |          only readable for TNT               |;
 quote -         |      The file `*.tnt.tre` contain            |;
