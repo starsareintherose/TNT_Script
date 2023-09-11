@@ -31,65 +31,7 @@ quote -   \------------------------------------------------/;
 
 
 /*Set K*/
-procedure %1;
-var:
- actK
- minK
- maxK
- gVal
- a
- b
- Nval
- maxIts
-;
-if (ntax<0)
-  quote There is no data;
-  proc/;
-end
-/** find the value of g **/
-loop 0 nchar
-  if (!isinfo[#1]) continue; end
-  if (!isact[#1]) continue; end
-  set a=maxsteps[#1];
-  set b=minsteps[#1];
-  if (('a'-'b')>'gVal')
-    set gVal 'a'-'b';
-  end
-stop
-quote g value: 'gVal';
-set actK 10;
-set minK 0;
-set maxK 500; /** Assume 500 as the maximum possible value of K **/
-set maxIts 0;
-/** find the best value of K **/
-loop 0 1
-  quote actual k value: 'actK';
-  set a 1-('actK'/('actK'+1));
-  quote 'a';
-  set b ('actK'/('actK'+'gVal'-1))-('actK'/('actK'+'gVal'));
-  quote 'b';
-  set Nval 'a'/'b';
-  quote N value: 'Nval';
-  if (('Nval'>14.8)&&('Nval'<15.2)) endloop; end /** N is in range **/
-  if ('Nval'>15.2)
-    set minK 'actK';
-  else
-    set maxK 'actK';
-  end
-  set a ('maxK'-'minK')/2;
-  set actK 'minK' + 'a';
-  set maxIts ++;
-  if ('maxIts'==100) endloop; end /** emergency exit **/
-  setloop 0;
-stop
-/** If out of emergency **/
-if ('maxIts'==100)
-  quote Iterations are not finished;
-  quote Best K is 'actK';
-  proc /;
-end
-quote K value: 'actK' (N='Nval');
-piwe='actK';
+piwe=12;
 
 /*Reopen tnt*/
 procedure %1;
@@ -98,6 +40,7 @@ hold 10000;
 /*Search trees*/
 xpiwe(*;
 mult=replic 1000 tbr hold 1000;
+bbreak=tbr;
 sect: slack 1000; 
 xmult=hit 1000 noupdate replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
 piwe&;
@@ -111,7 +54,6 @@ tsave = trees.ctf;
 tsave *= trees.tnt.tre;
 
 /*Consensus tree*/
-bbreak=tbr;
 nelsen *;
 
 /*Export consensus tree*/
