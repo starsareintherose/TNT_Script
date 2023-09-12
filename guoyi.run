@@ -1,19 +1,15 @@
 log tnt.log;
-macro=;
-taxname+1000;
-taxname=;
-mxram 10240;
-nstates 32;
-nstates NOGAPS;
+macro=; taxname+1000; taxname=; mxram 10240; nstates 32; nstates NOGAPS;
 
 /*Arguments*/
 if ( argnumber != 1 )
   silent -console;
-  quote -   /-----------------------------------------------\;
-  quote -   |        GUOYI TNT SCRIPT 2022-2023 MIT         |;
-  quote -   |        You need to give your filename         |;
-  quote -   |           tnt*> guoyi filename                |;
-  quote -   \-----------------------------------------------/;
+  quote -   /--------------------------------------------------\;
+  quote -   |        GUOYI TNT SCRIPT 2022-2023 MIT            |;
+  quote -   |        You need to give your filename            |;
+  quote -   | shell> tnt run guoyi.tnt filename, (Linux & Mac) |;
+  quote -   | shell> tnt run guoyi.run filename; (Windows)     |;
+  quote -   \--------------------------------------------------/;
   proc/; 
 end
 
@@ -22,8 +18,8 @@ quote -   /-----------------------------------------------\;
 quote -   |    Implied weighting will be estimated.        |;
 quote -   |    TBR Mult and Xmult will be performed.       |;
 quote -   |    Strict consensus will be used.              |;
-quote -   |    Relative bremer support, jackknifing and    |;
-quote -   |        boot will be shown on the resample.svg. |;
+quote -   |    Jackknifing, bootstrap and relative bremer  |;
+quote -   |        will be shown on the resample.svg.      |;
 quote -   |    Apomorphic characters mapping will be shown |;
 quote -   |        on the apo.svg and saved to apo*.tre.   |;
 quote -   |    TL, CI and RI will be calculated finally.   |;
@@ -37,13 +33,15 @@ piwe=12;
 procedure %1;
 hold 10000;
 
-/*Search trees*/
+/*Implied weighting settings*/
 xpiwe(*;
+piwe&;
+
+/*Search trees*/
 mult=replic 1000 tbr hold 1000;
-bbreak=tbr;
+bbreak=tbr fill;
 sect: slack 1000; 
 xmult=hit 1000 noupdate replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
-piwe&;
 
 /*Export trees*/
 export= trees.tre;
@@ -56,16 +54,36 @@ tsave *= trees.tnt.tre;
 /*Consensus tree*/
 nelsen *;
 
+/*Tree vault store*/
+hold /+0;
+tvault >/;
+
 /*Export consensus tree*/
-tchoose/;
+tchoose /;
 export - original.tre;
 taxname-;
 export - original_no.tre;
 tsave = original.ctf;
 tsave *= original.tnt.tre;
 
+/*Caulculate TL/CI/RI score*/
+report-;
+var-;
+var =
+ 0 themin
+ 1 themax
+ 2 CI
+ 3 RI
+ 4 TL
+;
+set themin minsteps;
+set themax maxsteps;
+set TL length[0];
+set CI 'themin'/'TL'; /*CI=1 means no homoplasy*/
+set RI ('themax'-'TL')/('themax'-'themin'); /*RI=1 character fits perfetcly*/
+report=;
+
 /*Apomorphic characters*/
-tchoose/;
 export = winclada.tre;
 taxname =;
 ttags=;
@@ -81,20 +99,19 @@ taxname-;
 export - apo_no.tre;
 ttags-;
 
-/*Get Bremer/jak/boot support*/
+/*Get jak/boot/relative-bremer support*/
 tchoose/;
 ttags=;
+ttags]; /*in one line*/
+resample jak replications 1000 from 0;
+
+resample boot replications 1000 from 0;
+
 sub 1; hold +1000; bbreak=fill;
-sub 2; hold +2000; bbreak=fill;
 sub 3; hold +3000; bbreak=fill;
-sub 4; hold +4000; bbreak=fill;
 sub 5; hold +5000; bbreak=fill;
-sub 6; hold +6000; bbreak=fill;
 sub 7; hold +7000; bbreak=fill;
-sub 8; hold +8000; bbreak=fill;
 bsupport[;
-resample jak replications 1000;
-resample boot replications 1000;
 
 /*Export consensus tree with supports*/
 ttags & resample.svg thickness 7 italics fontsize 15;
@@ -108,30 +125,11 @@ taxname-;
 export - resample_no.tre;
 ttags-;
 
-/*Caulculate TL/CI/RI score*/
-length *;
-report-;
-var-;
-var =
- 0 themin
- 1 themax
- + CIs [ ( ntrees + 1 ) ]
- + RIs [ ( ntrees + 1 ) ]
- + this
-;
-set themin minsteps;
-set themax maxsteps;
-loop 0 ntrees
-   progress #1 (ntrees+1) Calculating indices...;
-   set this length[#1];
-   set CIs[#1] 'themin'/'this'; /*CI=1 means no homoplasy*/
-   set RIs[#1] ('themax'-'this')/('themax'-'themin'); /*RI=1 character fits perfetcly*/
-   stop
-progress/;
-report=;
+/*Report CI/RI/TL */
 macfloat 3;
-maketable CIs Consistency index;
-maketable RIs Retention index;
+quote Consistency Index (CI) is 'CI';
+quote Retention Index (RI) is 'RI';
+quote Tree Length (TL) is 'TL';
 
 /*Report*/
 quote -         /----------------------------------------------\;
@@ -154,7 +152,7 @@ quote -         |      The file `*.tnt.tre` contain            |;
 quote -         |          is the ctf file with taxname        |;
 quote -         |      The file `resample.svg` contain         |;
 quote -         |          strict consensus tree with          |;
-quote -         |          relative bremer, jak and boot       |;
+quote -         |          relative jak, boot and bremer       |;
 quote -         |          support on the tree                 |;
 quote -         |      The file `apo.svg` contain the          |;
 quote -         |          tree with apomorphy mapping         |;
