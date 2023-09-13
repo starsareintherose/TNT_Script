@@ -42,15 +42,15 @@ tnt run guoyi.run filename datatype weight K cons resample prefix,
 
   -  num=number, dna=DNA, prot=protein, 32=max number allowed (default)        
 
-- weight should be `iw`, ew, `eiw`
+- weight should be `iw`, `ew`, `eiw`
 
   -  iw=implied weight, ew=equal weight, eiw=extended implied weight (default) N.B. ew must followed 0 (the K value position for ew iw and eiw)               
 
-- K is 12 (default) following Goloboff et al. 2017 (Cladistics 34: 407–437)
+- K is `12` (default) following Goloboff et al. 2017 (Cladistics 34: 407–437)
 
   - it must more than 0 
 
-- cons should be str, mjr, hlf  
+- cons should be `str`, `mjr`, `hlf`  
 
   -  mjr=majority rule, hlf=half, str=strict (default)                   
 
