@@ -1,47 +1,184 @@
 log tnt.log;
-macro=; taxname+1000; taxname=; mxram 10240; nstates 32; nstates NOGAPS;
+
+macro=;
 
 /*Arguments*/
-if ( argnumber != 1 )
+if ( (argnumber == 0) | (argnumber >=7) )
   silent -console;
-  quote -   /--------------------------------------------------\;
-  quote -   |        GUOYI TNT SCRIPT 2022-2023 MIT            |;
-  quote -   |        You need to give your filename            |;
-  quote -   | shell> tnt run guoyi.tnt filename, (Linux & Mac) |;
-  quote -   | shell> tnt run guoyi.run filename; (Windows)     |;
-  quote -   \--------------------------------------------------/;
+  quote -   /----------------------------------------------------\;
+  quote -   |        GUOYI TNT SCRIPT 2022-2023 MIT              |;
+  quote -   |        You need to give your filename              |;
+  quote -   | shell> tnt run guoyi.tnt filename, (Linux & Mac)   |;
+  quote -   | shell> tnt run guoyi.run filename(semicolon) (Win) |;
+  quote -   |        ==============================              |;
+  quote -   |        === Parameters     Details ===              |;
+  quote -   |        ==============================              |;
+  quote -   |        filename datatype weight 0/K cons resample  |;
+  quote -   |          - datatpye should be 32, dna, prot, num   |;
+  quote -   |            num=number, dna=DNA, prot=protein       |;
+  quote -   |            32=max number allowed (default)         |;
+  quote -   |          - weight should be iw, ew, eiw            |;
+  quote -   |            iw=implied weight, ew=equal weight      |;
+  quote -   |            eiw=extended implied weight (default)   |;
+  quote -   |            N.B. ew must followed 0                 |;
+  quote -   |          - cons should be str, mjr, hlf            |;
+  quote -   |            mjr=majority rule, hlf=half             |;
+  quote -   |            str=strict (default)                    |;
+  quote -   |          - resample should be sum of what you want |;
+  quote -   |            jak=1, boot=2, relative bremer=4        |;
+  quote -   |            i.e. jak+boot+bremer=7 (default)        |;
+  quote -   \----------------------------------------------------/;
   proc/; 
 end
 
+/*Basic settings*/
+taxname+1000;
+taxname=;
+mxram 10240;
+if(argnumber>=2)
+  nstates %2;
+else
+  nstates 32;
+end
+nstates NOGAPS;
+
+/*Set K*/
+if(argnumber>2 )
+  if (eqstring [ %3 ew ])
+    quote Equal weighting is used;
+    if (argnumber>=4)
+      if (%4!=0)
+        quote Warning: equal weighting %4 should be fullfilled with 0;
+      end
+    end	
+  end
+  if ((eqstring [ %3 iw ]) | (eqstring [ %3 eiw ]))
+    if (argnumber>=4)
+      piwe=%4;
+    else
+      piwe=12;
+    end
+  end
+else
+  piwe=12;
+end
+
+/*Reopen tnt*/
+procedure %1;
+hold 10000;
+
 /*Report what will be done*/
 quote -   /-----------------------------------------------\;
-quote -   |    Implied weighting will be estimated.        |;
+if(argnumber>2)
+  if (eqstring [ %3 iw ])
+    if (argnumber>3)
+quote -   |    Implied weighting will be used, K is %4.    |;
+    else
+quote -   |    Implied weighting will be used, K is 12.    |;
+    end
+  end
+  if (eqstring [ %3 eiw ])
+    if (argnumber>3)
+quote -   |    Ex-implied weighting will be used, K is %4. |;
+    else
+quote -   |    Ex-implied weighting will be used, K is 12. |;
+    end
+  end
+  if (eqstring [ %3 ew ])
+quote -   |    Equal weighting will be used.               |;
+  end
+else
+quote -   |    Ex-implied weighting will be used, K is 12. |;
+end
+if (ntax<=25)
+quote -   |    Implicit enumeration will be performed.     |;
+end
+if ((ntax>25) && (ntax < 75))
+quote -   |    TBR Mult will be performed.                 |;
+end
+if (ntax>=75)
 quote -   |    TBR Mult and Xmult will be performed.       |;
+end
+if (argnumber>=5)
+  if (eqstring [ %5 mjr ])
+quote -   |    Majority-rule consensus will be used.       |;
+  end
+  if (eqstring [ %5 hlf ])
+quote -   |    Half strict consensus will be used.         |;
+  end
+  if(eqstring [ %5 str ])
 quote -   |    Strict consensus will be used.              |;
+  end
+end
+if (argnumber<5)
+quote -   |    Strict consensus will be used.              |;
+end
+if (argnumber>=6)
+  if (%6==1)
+quote -   |    Jackknifing                                 |;
+  end
+  if (%6==2)
+quote -   |    Bootstrap                                   |;
+  end
+  if (%6==3)
+quote -   |    Jackknifing and bootstrap                   |;
+  end
+  if (%6==4)
+quote -   |    Relative bremer support                     |;
+  end
+  if (%6==5)
+quote -   |    Jackknifing and relative bremer support     |;
+  end
+  if (%6==6)
+quote -   |    Bootstrap and relative bremer support       |;
+  end
+  if (%6==7)
 quote -   |    Jackknifing, bootstrap and relative bremer  |;
+  end
+end
+if (argnumber<6)
+quote -   |    Jackknifing, bootstrap and relative bremer  |;
+end
 quote -   |        will be shown on the resample.svg.      |;
 quote -   |    Apomorphic characters mapping will be shown |;
 quote -   |        on the apo.svg and saved to apo*.tre.   |;
 quote -   |    TL, CI and RI will be calculated finally.   |;
 quote -   \------------------------------------------------/;
 
-
-/*Set K*/
-piwe=12;
-
-/*Reopen tnt*/
-procedure %1;
-hold 10000;
-
 /*Implied weighting settings*/
-xpiwe(*;
-piwe&;
+if(argnumber>2)
+  if (eqstring [ %3 iw ])
+    piwe&;
+  end
+  if (eqstring [ %3 eiw ])
+    xpiwe(*;
+    piwe&;
+  end
+else
+  xpiwe(*;
+  piwe&;
+end
 
 /*Search trees*/
-mult=replic 1000 tbr hold 1000;
-bbreak=tbr fill;
-sect: slack 1000; 
-xmult=hit 1000 noupdate replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+if(eqstring [ %3 ew ] | eqstring [ %3 iw ] )
+  if (ntax<=25)
+    ienum;
+  else
+    mult=replic 1000 tbr hold 1000;
+    bbreak=tbr fill;
+    if (ntax>74)
+      sect: slack 1000; 
+      xmult=hit 1000 noupdate replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+    end
+  end
+else
+  mult=replic 1000 tbr hold 1000;
+  bbreak=tbr fill;
+  if (ntax>74)
+    sect: slack 1000;
+    xmult=hit 1000 noupdate replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+  end
+end
 
 /*Export trees*/
 export= trees.tre;
@@ -52,7 +189,19 @@ tsave = trees.ctf;
 tsave *= trees.tnt.tre;
 
 /*Consensus tree*/
-nelsen *;
+if (argnumber<=4)
+  nelsen *;
+else
+  if (eqstring [ %5 str ])
+    nelsen *;
+  end
+  if (eqstring [ %5 mjr ])
+    majority *;
+  end
+  if (eqstring [ %5 hlf ])
+    comcomp *;
+  end
+end
 
 /*Tree vault store*/
 hold /+0;
@@ -103,15 +252,40 @@ ttags-;
 tchoose/;
 ttags=;
 ttags]; /*in one line*/
-resample jak replications 1000 from 0;
 
-resample boot replications 1000 from 0;
+/*    jak=1,		boot=2,		bremer=4,	*/
+/*    jak+boot=3,					*/
+/*    jak+brember=5,	boot+bremer=6,			*/
+/*    jak+boot+bremer=7,  				*/
 
-sub 1; hold +1000; bbreak=fill;
-sub 3; hold +3000; bbreak=fill;
-sub 5; hold +5000; bbreak=fill;
-sub 7; hold +7000; bbreak=fill;
-bsupport[;
+if (argnumber<=5)
+  /*jakknifing*/
+  resample jak replications 1000 from 0;
+  /*bootstrap*/
+  resample boot replications 1000 from 0;
+  /*relative bremer*/
+  sub 1; hold +1000; bbreak=fill;
+  sub 3; hold +3000; bbreak=fill;
+  sub 5; hold +5000; bbreak=fill;
+  sub 7; hold +7000; bbreak=fill;
+  bsupport[;
+else
+  if((%6==1) | (%6==3) | (%6==5) | (%6==7))
+    resample jak replications 1000 from 0;
+  end
+  
+  if((%6==2) | (%6==3) | (%6==6) | (%6==7))
+    resample boot replications 1000 from 0;
+  end
+  
+  if((%6==4) | (%6==5) | (%6==6) | (%6==7))
+    sub 1; hold +1000; bbreak=fill;
+    sub 3; hold +3000; bbreak=fill;
+    sub 5; hold +5000; bbreak=fill;
+    sub 7; hold +7000; bbreak=fill;
+    bsupport[;
+  end
+end
 
 /*Export consensus tree with supports*/
 ttags & resample.svg thickness 7 italics fontsize 15;
@@ -151,9 +325,52 @@ quote -         |          only readable for TNT               |;
 quote -         |      The file `*.tnt.tre` contain            |;
 quote -         |          is the ctf file with taxname        |;
 quote -         |      The file `resample.svg` contain         |;
+
+
+if (argnumber>=5) 
+  if(eqstring [ %5 mjr ])
+quote -         |          majority rule consensus tree with   |;
+  end
+  if(eqstring [ %5 hlf ])
+quote -         |          half strict consensus tree with     |;
+  end
+  if(eqstring [ %5 str ])
 quote -         |          strict consensus tree with          |;
-quote -         |          relative jak, boot and bremer       |;
-quote -         |          support on the tree                 |;
+  end
+else
+quote -         |          strict consensus tree with          |;
+end
+
+if (argnumber>=6) 
+  if (%6==1)
+quote -         |          jackknifing                         |;
+  end
+  if (%6==2)
+quote -         |          bootstrap                           |;
+  end
+  if (%6==3)
+quote -         |          jackknifing and bootstrap           |;
+  end
+  if (%6==4)
+quote -         |          relative bremer support             |;
+  end
+  if (%6==5)
+quote -         |          jackknifing and relative bremer     |;
+quote -         |          support                             |;
+  end
+  if (%6==6)
+quote -         |          bootstrap and relative bremer       |;
+quote -         |          support                             |;
+  end
+  if (%6==7)
+quote -         |          jackknifing, bootstrap and          |;
+quote -         |          relative bremer support             |;
+  end
+else
+quote -         |          jackknifing, bootstrap and          |;
+quote -         |          relative bremer support             |;
+end
+
 quote -         |      The file `apo.svg` contain the          |;
 quote -         |          tree with apomorphy mapping         |;
 quote -         |      The file `winclada.tre` can be          |;
