@@ -12,11 +12,11 @@ The TNT script follows MIT and part of script is from setk.run belonging to Salv
 
 ## Functions
 
-- Estimate implied weighting K value.      
+- Extended implied weighting with K value setting (default, default K=12) or implighted weighting with K value setting (default K=12) or equal weighting.      
 
-- Search trees via TBR Mult (1000 times) and Xmult (use random sectorial searches, produce 1,000 hits to best length and stop, 10 cycles of drifting, ratchet and fusing).      
+- Search trees via implicit enumeration (ntax<=25) or TBR Mult (1000 times) (25<ntax<75) or Mult and Xmult (use random sectorial searches, produce 1,000 hits to best length and stop, 10 cycles of drifting, ratchet and fusing) (ntax>=75).      
 
-- Perform Strict consensus.            
+- Perform Strict consensus / Majority-rule consensus / Half strict consensus.            
 
 - Calculate Relative Bremer support, jackknifing (1,000 times), and bootstrap (1,000 times).
 
@@ -26,15 +26,41 @@ The TNT script follows MIT and part of script is from setk.run belonging to Salv
 
 ## Options
 
+For Windows users
+
+```
+tnt run guoyi.run filename datatype weight 0/K cons resample;
+```
+
+For Linux and Mac users
+
+```
+tnt run guoyi.run filename datatype weight 0/K cons resample,
+```
+
+- datatpye should be `32`, `dna`, `prot`, `num`  
+
+  -  num=number, dna=DNA, prot=protein, 32=max number allowed (default)        
+
+- weight should be `iw`, ew, `eiw`
+
+  -  iw=implied weight, ew=equal weight, eiw=extended implied weight (default) N.B. ew must followed 0 (the K value position for ew iw and eiw)               
+
+- cons should be str, mjr, hlf  
+
+  -  mjr=majority rule, hlf=half, str=strict (default)                   
+
+- resample should be sum of what you want
+
+  -  jak=1, boot=2, relative bremer=4 i.e. jak+boot+bremer=7 (default)       
+
+## Results
+
 - Results instructions are at the end of `tnt.log`.
 
 - `trees.tre`, `resample.tre` are trees with taxname.
 
 - `trees_no.tre`, `resample_no.tre` are trees without taxname.
-
-- `nelsen` can be replaced by `majority`.
-
-- `xmult` and `mult` replications and hold trees number can be adjusted.
 
 - `winclada.tre` can be transferred to the acceptable format for WinClada by tnt2winclada and the output file can be put into Winclada with your tnt matrix file `filename` for mapping apomorphic characters and homoplasy.
 
