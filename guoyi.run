@@ -1,9 +1,9 @@
-log tnt.log;
-
 macro=;
 
+log %7.tnt.log;
+
 /*Arguments*/
-if ( (argnumber == 0) | (argnumber >=7) )
+if ( (argnumber == 0) | (argnumber >7) )
   silent -console;
   quote -   /----------------------------------------------------\;
   quote -   |        GUOYI TNT SCRIPT 2022-2023 MIT              |;
@@ -13,20 +13,25 @@ if ( (argnumber == 0) | (argnumber >=7) )
   quote -   |        ==============================              |;
   quote -   |        === Parameters     Details ===              |;
   quote -   |        ==============================              |;
-  quote -   |        filename datatype weight 0/K cons resample  |;
-  quote -   |          - datatpye should be 32, dna, prot, num   |;
+  quote -   |        filename type weight K cons resamp prefix   |;
+  quote -   |          - type should be 32, dna, prot, num       |;
   quote -   |            num=number, dna=DNA, prot=protein       |;
   quote -   |            32=max number allowed (default)         |;
   quote -   |          - weight should be iw, ew, eiw            |;
   quote -   |            iw=implied weight, ew=equal weight      |;
   quote -   |            eiw=extended implied weight (default)   |;
-  quote -   |            N.B. ew must followed 0                 |;
+  quote -   |            N.B. K of ew must followed 0 (=NA)      |;
+  quote -   |          - K is 12 (default) following Goloboff    |;
+  quote -   |            et al. 2017 (Cladistics 34: 407–437)    |;
+  quote -   |            it must more than 0                     |;
   quote -   |          - cons should be str, mjr, hlf            |;
   quote -   |            mjr=majority rule, hlf=half             |;
   quote -   |            str=strict (default)                    |;
-  quote -   |          - resample should be sum of what you want |;
+  quote -   |          - resamp should be sum of what you want   |;
   quote -   |            jak=1, boot=2, relative bremer=4        |;
   quote -   |            i.e. jak+boot+bremer=7 (default)        |;
+  quote -   |          - prefix can be empty, or a string        |;
+  quote -   |            default is empty                        |;
   quote -   \----------------------------------------------------/;
   proc/; 
 end
@@ -181,12 +186,12 @@ else
 end
 
 /*Export trees*/
-export= trees.tre;
+export= %7.trees.tre;
 taxname-;
-export= trees_no.tre;
+export= %7.trees_no.tre;
 taxname=;
-tsave = trees.ctf;
-tsave *= trees.tnt.tre;
+tsave = %7.trees.ctf;
+tsave *= %7.trees.tnt.tre;
 
 /*Consensus tree*/
 if (argnumber<=4)
@@ -209,11 +214,11 @@ tvault >/;
 
 /*Export consensus tree*/
 tchoose /;
-export - original.tre;
+export - %7.original.tre;
 taxname-;
-export - original_no.tre;
-tsave = original.ctf;
-tsave *= original.tnt.tre;
+export - %7.original_no.tre;
+tsave = %7.original.ctf;
+tsave *= %7.original.tnt.tre;
 
 /*Caulculate TL/CI/RI score*/
 report-;
@@ -233,7 +238,7 @@ set RI ('themax'-'TL')/('themax'-'themin'); /*RI=1 character fits perfetcly*/
 report=;
 
 /*Apomorphic characters*/
-export = winclada.tre;
+export = %7.winclada.tre;
 taxname =;
 ttags=;
 apo >0;
@@ -242,10 +247,10 @@ quote -                     apomorphy tags start                ;
 ttags/;
 quote -                     apomorphy tags stop                 ;
 quote -         \----------------------------------------------/;
-ttags & apo.svg thickness 7 italics fontsize 15;
-export < apo.tre;
+ttags & %7.apo.svg thickness 7 italics fontsize 15;
+export < %7.apo.tre;
 taxname-;
-export - apo_no.tre;
+export - %7.apo_no.tre;
 ttags-;
 
 /*Get jak/boot/relative-bremer support*/
@@ -288,15 +293,15 @@ else
 end
 
 /*Export consensus tree with supports*/
-ttags & resample.svg thickness 7 italics fontsize 15;
+ttags & %7.resample.svg thickness 7 italics fontsize 15;
 quote -         /----------------------------------------------\;
 quote -                       resample tags start               ;
 ttags/;
 quote -                       resample tags stop                ;
 quote -         \----------------------------------------------/;
-export < resample.tre;
+export < %7.resample.tre;
 taxname-;
-export - resample_no.tre;
+export - %7.resample_no.tre;
 ttags-;
 
 /*Report CI/RI/TL */

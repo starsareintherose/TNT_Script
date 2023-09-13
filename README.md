@@ -18,7 +18,7 @@ The TNT script follows MIT and part of script is from setk.run belonging to Salv
 
 - Perform Strict consensus / Majority-rule consensus / Half strict consensus.            
 
-- Calculate Relative Bremer support, jackknifing (1,000 times), and bootstrap (1,000 times).
+- Calculate jackknifing (1,000 times), bootstrap (1,000 times) and Relative Bremer support.
 
 - Map apomorphic characters on the consensus tree.
 
@@ -29,13 +29,13 @@ The TNT script follows MIT and part of script is from setk.run belonging to Salv
 For Windows users
 
 ```
-tnt run guoyi.run filename datatype weight 0/K cons resample;
+tnt run guoyi.run filename datatype weight 0/K cons resample prefix;
 ```
 
 For Linux and Mac users
 
 ```
-tnt run guoyi.run filename datatype weight 0/K cons resample,
+tnt run guoyi.run filename datatype weight K cons resample prefix,
 ```
 
 - datatpye should be `32`, `dna`, `prot`, `num`  
@@ -46,6 +46,10 @@ tnt run guoyi.run filename datatype weight 0/K cons resample,
 
   -  iw=implied weight, ew=equal weight, eiw=extended implied weight (default) N.B. ew must followed 0 (the K value position for ew iw and eiw)               
 
+- K is 12 (default) following Goloboff et al. 2017 (Cladistics 34: 407–437)
+
+  - it must more than 0 
+
 - cons should be str, mjr, hlf  
 
   -  mjr=majority rule, hlf=half, str=strict (default)                   
@@ -53,6 +57,10 @@ tnt run guoyi.run filename datatype weight 0/K cons resample,
 - resample should be sum of what you want
 
   -  jak=1, boot=2, relative bremer=4 i.e. jak+boot+bremer=7 (default)       
+
+- prefix can  be empty or a string
+
+  - default is empty
 
 ## Results
 
