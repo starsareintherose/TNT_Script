@@ -14,7 +14,7 @@ The TNT script follows MIT and part of script is from setk.run belonging to Salv
 
 - Extended implied weighting with K value setting (default, default K=12) or implighted weighting with K value setting (default K=12) or equal weighting.      
 
-- Search trees via implicit enumeration (ntax<=25) or TBR Mult (1000 times) (25<ntax<75) or Mult and Xmult (use random sectorial searches, produce 1,000 hits to best length and stop, 10 cycles of drifting, ratchet and fusing) (ntax>=75).      
+- Search trees via implicit enumeration (ntax<=25, but not for eiw) or TBR Mult (1000 times) (25<ntax<75, also for ntax<=25 with eiw) or Mult and Xmult (use random sectorial searches, produce 1,000 hits to best length and stop, 10 cycles of drifting, ratchet and fusing) (ntax>=75).      
 
 - Perform Strict consensus / Majority-rule consensus / Half strict consensus.            
 
