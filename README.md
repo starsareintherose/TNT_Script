@@ -1,6 +1,6 @@
 # TNT Script used by Guoyi
 
-The TNT script follows MIT and part of script is from setk.run belonging to Salvador Arias (Instituto Miguel Lillo, San Miguel de Tucumán, Argentina).
+The TNT script follows MIT license. 
 
 ## Usage
 
@@ -12,9 +12,9 @@ The TNT script follows MIT and part of script is from setk.run belonging to Salv
 
 ## Functions
 
-- Extended implied weighting with K value setting (default, default K=12) or implighted weighting with K value setting (default K=12) or equal weighting.      
+- Extended implied weighting with K value setting (default, default K=12) or implied weighting with K value setting (default K=12) or equal weighting.      
 
-- Search trees via implicit enumeration (ntax<=25, but not for eiw) or TBR Mult (1000 times) (25<ntax<75, also for ntax<=25 with eiw) or Mult and Xmult (use random sectorial searches, produce 1,000 hits to best length and stop, 10 cycles of drifting, ratchet and fusing) (ntax>=75).      
+- Search trees via implicit enumeration (ntax<=25, but not for eiw) or TBR Mult (1000 times) with branch swapping (25<ntax<75, also for ntax<=25 with eiw) or Mult with branch swapping and Xmult (use random sectorial searches, produce 1,000 hits to best length and stop, 10 cycles of drifting, ratchet and fusing) (ntax>=75).      
 
 - Perform Strict consensus / Majority-rule consensus / Half strict consensus.            
 
