@@ -28,8 +28,8 @@ if ( (argnumber == 0) | (argnumber >7) )
   quote -   |            mjr=majority rule, hlf=half             |;
   quote -   |            str=strict (default)                    |;
   quote -   |          - resamp should be sum of what you want   |;
-  quote -   |            jak=1, boot=2, relative bremer=4        |;
-  quote -   |            i.e. jak+boot+bremer=7 (default)        |;
+  quote -   |            jak=1, boot=2, relative bremer=4 sym=8  |;
+  quote -   |            i.e. jak+boot+sym+bremer=15 (default)   |;
   quote -   |          - prefix can be empty, or a string        |;
   quote -   |            default is empty                        |;
   quote -   \----------------------------------------------------/;
@@ -37,9 +37,9 @@ if ( (argnumber == 0) | (argnumber >7) )
 end
 
 /*Basic settings*/
-taxname+1000;
+taxname+100;
 taxname=;
-mxram 10240;
+mxram 500;
 if(argnumber>=2)
   nstates %2;
 else
@@ -102,7 +102,7 @@ if ((ntax>25) && (ntax < 75))
 quote -   |    TBR Mult will be performed.                 |;
 end
 if (ntax>=75)
-quote -   |    TBR Mult and Xmult will be performed.       |;
+quote -   |    Xmult will be performed.                    |;
 end
 if (argnumber>=5)
   if (eqstring [ %5 mjr ])
@@ -140,9 +140,38 @@ quote -   |    Bootstrap and relative bremer support       |;
   if (%6==7)
 quote -   |    Jackknifing, bootstrap and relative bremer  |;
   end
+  if (%6==8)
+quote -   |    Symmetric resampling                        |;
+  end
+  if (%6==9)
+quote -   |    Jackknifing and symmetric resampling        |;
+  end
+  if (%6==10)
+quote -   |    Bootstrap and symmetric resampling          |;
+  end
+  if (%6==11)
+quote -   |    Jackknifing, bootstrap and symmetric        |;
+quote -   |        resampling                              |;
+  end
+  if (%6==12)
+quote -   |    Symmetric resampling and relative bremer    |;
+  end
+  if (%6==13)
+quote -   |    Jackknifing, symmetric resampling and       |;
+quote -   |        relative bremer                         |;
+  end
+  if (%6==14)
+quote -   |    Bootstrap, symmetric resampling and         |;
+quote -   |        relative bremer                         |;
+  end
+  if (%6==15)
+quote -   |    Jackknifing, bootstrap, symmetric           |;
+quote -   |        resampling and relative bremer support  |;
+  end
 end
 if (argnumber<6)
-quote -   |    Jackknifing, bootstrap and relative bremer  |;
+quote -   |    Jackknifing, bootstrap, symmetric           |;
+quote -   |        resampling and relative bremer support  |;
 end
 quote -   |        will be shown on the resample.svg.      |;
 quote -   |    Apomorphic characters mapping will be shown |;
@@ -165,23 +194,27 @@ else
 end
 
 /*Search trees*/
-if(eqstring [ %3 ew ] | eqstring [ %3 iw ] )
-  if (ntax<=25)
-    ienum;
-  else
-    mult=replic 1000 tbr hold 1000;
-    bbreak=tbr fill;
-    if (ntax>74)
-      sect: slack 1000; 
-      xmult=hit 1000 noupdate replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+if(argnumber>2)
+  if(eqstring [ %3 ew ] | eqstring [ %3 iw ] )
+    if (ntax<=25)
+      ienum;
+    else
+      if (ntax<=74)
+        mult=replic 1000 tbr hold 1000;
+        bbreak=tbr fill;
+      end
+      if (ntax>74)
+        sect: slack 40; 
+        xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 10 keepall;
+      end
     end
-  end
+  end  
 else
   mult=replic 1000 tbr hold 1000;
   bbreak=tbr fill;
   if (ntax>74)
     sect: slack 1000;
-    xmult=hit 1000 noupdate replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+    xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 10 keepall;
   end
 end
 
@@ -262,12 +295,19 @@ ttags]; /*in one line*/
 /*    jak+boot=3,					*/
 /*    jak+brember=5,	boot+bremer=6,			*/
 /*    jak+boot+bremer=7,  				*/
+/*    sym=8,						*/
+/*    jak+sym=9,	boot+sym=10,	bremer+sym=12   */
+/*    jak+boot+sym=11,	jak+bremer+sym=13,		*/
+/*    boot+bremer+sym=14,				*/
+/*    jak+sym+boot+bremer=15				*/
 
 if (argnumber<=5)
   /*jakknifing*/
   resample jak replications 1000 from 0;
   /*bootstrap*/
   resample boot replications 1000 from 0;
+  /*symmetric resampling*/
+  resample sym replications 1000 from 0;
   /*relative bremer*/
   sub 1; hold +1000; bbreak=fill;
   sub 3; hold +3000; bbreak=fill;
@@ -275,15 +315,19 @@ if (argnumber<=5)
   sub 7; hold +7000; bbreak=fill;
   bsupport[;
 else
-  if((%6==1) | (%6==3) | (%6==5) | (%6==7))
+  if((%6==1) | (%6==3) | (%6==5) | (%6==7) | (%6==9) | (%6==11) | (%6==13) | (%6==15))
     resample jak replications 1000 from 0;
   end
   
-  if((%6==2) | (%6==3) | (%6==6) | (%6==7))
+  if((%6==2) | (%6==3) | (%6==6) | (%6==7) | (%6==10) | (%6==11) | (%6==14) | (%6==15))
     resample boot replications 1000 from 0;
   end
-  
-  if((%6==4) | (%6==5) | (%6==6) | (%6==7))
+
+  if((%6==8) | (%6==9) | (%6==10) | (%6==11) | (%6==12) | (%6==13) | (%6==14) | (%6==15))
+    resample sym replications 1000 from 0;
+  end
+
+  if((%6==4) | (%6==5) | (%6==6) | (%6==7) | (%6==12) | (%6==13) | (%6==14) | (%6==15))
     sub 1; hold +1000; bbreak=fill;
     sub 3; hold +3000; bbreak=fill;
     sub 5; hold +5000; bbreak=fill;
@@ -371,9 +415,38 @@ quote -         |          support                             |;
 quote -         |          jackknifing, bootstrap and          |;
 quote -         |          relative bremer support             |;
   end
-else
+  if (%6==8)
+quote -         |          symmetric resampling                |;
+  end
+  if (%6==9)
+quote -         |          Jackknifing and symmetric resample  |;
+  end
+  if (%6==10)
+quote -         |          Bootstrap and symmetric resample    |;
+  end
+  if (%6==11)
 quote -         |          jackknifing, bootstrap and          |;
+quote -         |          symmetric resample                  |;
+  end
+  if (%6==12)
+quote -         |          relative bremer support and         |;
+quote -         |          symmetric resampling                |;
+  end
+  if (%6==13)
+quote -         |          Jackknifing, symmetric resample and |;
 quote -         |          relative bremer support             |;
+  end
+  if (%6==14)
+quote -         |          bootstrap, symmetric resmaple and   |;
+quote -         |          relative bremer support             |;
+  end
+  if (%6==15)
+quote -         |          jackknifing, bootstrap, symmetric   |;
+quote -         |          resample and relative bremer support|;
+  end
+else
+quote -         |          jackknifing, bootstrap, symmetric   |;
+quote -         |          resample and relative bremer support|;
 end
 
 quote -         |      The file `apo.svg` contain the          |;
