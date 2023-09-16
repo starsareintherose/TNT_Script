@@ -208,6 +208,14 @@ if(argnumber>2)
         xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 10 keepall;
       end
     end
+  else
+    if (ntax<=74)
+      mult=replic 1000 tbr hold 1000;
+      bbreak=tbr fill;
+    else
+      sect: slack 40;
+      xmult=hit 50 replications 20 drift 20 ratchet 10 fuse 10 hold 10 keepall;
+    end
   end  
 else
   mult=replic 1000 tbr hold 1000;
