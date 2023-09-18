@@ -205,7 +205,7 @@ if(argnumber>2)
       end
       if (ntax>74)
         sect: slack 40; 
-        xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 10 keepall;
+        xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
       end
     end
   else
@@ -214,7 +214,7 @@ if(argnumber>2)
       bbreak=tbr fill;
     else
       sect: slack 40;
-      xmult=hit 50 replications 20 drift 20 ratchet 10 fuse 10 hold 10 keepall;
+      xmult=hit 50 replications 20 drift 20 ratchet 10 fuse 10 hold 1 keepall;
     end
   end  
 else
@@ -222,7 +222,7 @@ else
   bbreak=tbr fill;
   if (ntax>74)
     sect: slack 1000;
-    xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 10 keepall;
+    xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
   end
 end
 
