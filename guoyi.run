@@ -28,7 +28,7 @@ if ( (argnumber == 0) | (argnumber >7) )
   quote -   |            mjr=majority rule, hlf=half             |;
   quote -   |            str=strict (default)                    |;
   quote -   |          - resamp should be sum of what you want   |;
-  quote -   |            jak=1, boot=2, relative bremer=4 sym=8  |;
+  quote -   |            jak=1, boot=2, bremer=4 sym=8           |;
   quote -   |            i.e. jak+boot+sym+bremer=15 (default)   |;
   quote -   |          - prefix can be empty, or a string        |;
   quote -   |            default is empty                        |;
@@ -37,7 +37,7 @@ if ( (argnumber == 0) | (argnumber >7) )
 end
 
 /*Basic settings*/
-taxname+100;
+taxname+1000;
 taxname=;
 mxram 500;
 if(argnumber>=2)
@@ -132,13 +132,13 @@ quote -   |    Jackknifing and bootstrap                   |;
 quote -   |    Relative bremer support                     |;
   end
   if (%6==5)
-quote -   |    Jackknifing and relative bremer support     |;
+quote -   |    Jackknifing and bremer support              |;
   end
   if (%6==6)
-quote -   |    Bootstrap and relative bremer support       |;
+quote -   |    Bootstrap and bremer support                |;
   end
   if (%6==7)
-quote -   |    Jackknifing, bootstrap and relative bremer  |;
+quote -   |    Jackknifing, bootstrap and bremer support   |;
   end
   if (%6==8)
 quote -   |    Symmetric resampling                        |;
@@ -154,24 +154,24 @@ quote -   |    Jackknifing, bootstrap and symmetric        |;
 quote -   |        resampling                              |;
   end
   if (%6==12)
-quote -   |    Symmetric resampling and relative bremer    |;
+quote -   |    Symmetric resampling and bremer support     |;
   end
   if (%6==13)
 quote -   |    Jackknifing, symmetric resampling and       |;
-quote -   |        relative bremer                         |;
+quote -   |        bremer support                          |;
   end
   if (%6==14)
 quote -   |    Bootstrap, symmetric resampling and         |;
-quote -   |        relative bremer                         |;
+quote -   |        bremer support                          |;
   end
   if (%6==15)
 quote -   |    Jackknifing, bootstrap, symmetric           |;
-quote -   |        resampling and relative bremer support  |;
+quote -   |        resampling and bremer support           |;
   end
 end
 if (argnumber<6)
 quote -   |    Jackknifing, bootstrap, symmetric           |;
-quote -   |        resampling and relative bremer support  |;
+quote -   |        resampling and bremer support           |;
 end
 quote -   |        will be shown on the resample.svg.      |;
 quote -   |    Apomorphic characters mapping will be shown |;
@@ -294,7 +294,7 @@ taxname-;
 export - %7.apo_no.tre;
 ttags-;
 
-/*Get jak/boot/relative-bremer support*/
+/*Get jak/boot/bremer support*/
 tchoose/;
 ttags=;
 ttags]; /*in one line*/
@@ -316,12 +316,12 @@ if (argnumber<=5)
   resample boot replications 1000 from 0;
   /*symmetric resampling*/
   resample sym replications 1000 from 0;
-  /*relative bremer*/
+  /*bremer*/
   sub 1; hold +1000; bbreak=fill;
   sub 3; hold +3000; bbreak=fill;
   sub 5; hold +5000; bbreak=fill;
   sub 7; hold +7000; bbreak=fill;
-  bsupport[;
+  bsupport!!0;
 else
   if((%6==1) | (%6==3) | (%6==5) | (%6==7) | (%6==9) | (%6==11) | (%6==13) | (%6==15))
     resample jak replications 1000 from 0;
@@ -340,7 +340,7 @@ else
     sub 3; hold +3000; bbreak=fill;
     sub 5; hold +5000; bbreak=fill;
     sub 7; hold +7000; bbreak=fill;
-    bsupport[;
+    bsupport!!0;
   end
 end
 
@@ -409,19 +409,17 @@ quote -         |          bootstrap                           |;
 quote -         |          jackknifing and bootstrap           |;
   end
   if (%6==4)
-quote -         |          relative bremer support             |;
+quote -         |          bremer support                      |;
   end
   if (%6==5)
-quote -         |          jackknifing and relative bremer     |;
-quote -         |          support                             |;
+quote -         |          jackknifing and bremer support      |;
   end
   if (%6==6)
-quote -         |          bootstrap and relative bremer       |;
-quote -         |          support                             |;
+quote -         |          bootstrap and bremer support        |;
   end
   if (%6==7)
 quote -         |          jackknifing, bootstrap and          |;
-quote -         |          relative bremer support             |;
+quote -         |          bremer support                      |;
   end
   if (%6==8)
 quote -         |          symmetric resampling                |;
@@ -437,24 +435,24 @@ quote -         |          jackknifing, bootstrap and          |;
 quote -         |          symmetric resample                  |;
   end
   if (%6==12)
-quote -         |          relative bremer support and         |;
-quote -         |          symmetric resampling                |;
+quote -         |          bremer support and symmetric        |;
+quote -         |          resample                            |;
   end
   if (%6==13)
 quote -         |          Jackknifing, symmetric resample and |;
-quote -         |          relative bremer support             |;
+quote -         |          bremer support                      |;
   end
   if (%6==14)
 quote -         |          bootstrap, symmetric resmaple and   |;
-quote -         |          relative bremer support             |;
+quote -         |          bremer support                      |;
   end
   if (%6==15)
 quote -         |          jackknifing, bootstrap, symmetric   |;
-quote -         |          resample and relative bremer support|;
+quote -         |          resample and bremer support         |;
   end
 else
 quote -         |          jackknifing, bootstrap, symmetric   |;
-quote -         |          resample and relative bremer support|;
+quote -         |          resample and bremer support         |;
 end
 
 quote -         |      The file `apo.svg` contain the          |;

@@ -56,7 +56,7 @@ tnt run guoyi.run filename datatype weight K cons resample prefix,
 
 - resample should be sum of what you want
 
-  -  jak=1, boot=2, relative bremer=4 sym=8 i.e. jak+boot+sym+bremer=15 (default)       
+  -  jak=1, boot=2, bremer=4 sym=8 i.e. jak+boot+sym+bremer=15 (default)       
 
 - prefix can  be empty or a string
 
