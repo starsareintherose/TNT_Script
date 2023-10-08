@@ -347,6 +347,9 @@ if (argnumber<=5)
   sub 5; hold +5000; bbreak=fill;
   sub 7; hold +7000; bbreak=fill;
 
+  /*adjust to zero following Goloboff*/
+  sub 0;
+  
   /*get the consensus tree number*/
   var: nsubpars;
   set nsubpars ntrees;
@@ -382,6 +385,9 @@ else
     sub 3; hold +3000; bbreak=fill;
     sub 5; hold +5000; bbreak=fill;
     sub 7; hold +7000; bbreak=fill;
+
+    /*adjust to zero following Goloboff*/
+    sub 0;
 
     /*get the consensus tree number*/
     var: nsubpars;
