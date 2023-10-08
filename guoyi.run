@@ -5,41 +5,43 @@ log %7.tnt.log;
 /*Arguments*/
 if ( (argnumber == 0) || (argnumber >7) )
   silent -console;
-  quote -   /----------------------------------------------------\;
-  quote -   |        GUOYI TNT SCRIPT 2022-2023 MIT              |;
-  quote -   |        You need to give your filename              |;
-  quote -   | shell> tnt run guoyi.tnt filename, (Linux & Mac)   |;
-  quote -   | shell> tnt run guoyi.run filename(semicolon) (Win) |;
-  quote -   |        ==============================              |;
-  quote -   |        === Parameters     Details ===              |;
-  quote -   |        ==============================              |;
-  quote -   |        filename type weight K cons resamp prefix   |;
-  quote -   |          - type should be 32, dna, prot, num       |;
-  quote -   |            num=number, dna=DNA, prot=protein       |;
-  quote -   |            32=max number allowed (default)         |;
-  quote -   |          - weight should be iw, ew, eiw            |;
-  quote -   |            iw=implied weight, ew=equal weight      |;
-  quote -   |            eiw=extended implied weight (default)   |;
-  quote -   |            N.B. K of ew must followed 0 (=NA)      |;
-  quote -   |          - K is 12 (default) following Goloboff    |;
-  quote -   |            et al. 2017 (Cladistics 34: 407–437)    |;
-  quote -   |            it must more than 0                     |;
-  quote -   |          - cons should be str, mjr, hlf            |;
-  quote -   |            mjr=majority rule, hlf=half             |;
-  quote -   |            str=strict (default)                    |;
-  quote -   |          - resamp should be sum of what you want   |;
-  quote -   |            jak=1, boot=2, bremer=4 sym=8           |;
-  quote -   |            i.e. jak+boot+sym+bremer=15 (default)   |;
-  quote -   |          - prefix can be empty, or a string        |;
-  quote -   |            default is empty                        |;
-  quote -   \----------------------------------------------------/;
+  quote 
+/----------------------------------------------------\
+|        GUOYI TNT SCRIPT 2022-2023 MIT              |
+|        You need to give your filename              |
+| shell> tnt run guoyi.tnt filename, (Linux & Mac)   |
+| shell> tnt run guoyi.run filename(semicolon) (Win) |
+|        ==============================              |
+|        === Parameters     Details ===              |
+|        ==============================              |
+|        filename type weight K cons resamp prefix   |
+|          - type should be 32, dna, prot, num       |
+|            num=number, dna=DNA, prot=protein       |
+|            32=max number allowed (default)         |
+|          - weight should be iw, ew, eiw            |
+|            iw=implied weight, ew=equal weight      |
+|            eiw=extended implied weight (default)   |
+|            N.B. K of ew must followed 0 (=NA)      |
+|          - K is 12 (default) following Goloboff    |
+|            et al. 2017 (Cladistics 34: 407–437)    |
+|            it must more than 0                     |
+|          - cons should be str, mjr, hlf            |
+|            mjr=majority rule, hlf=half             |
+|            str=strict (default)                    |
+|          - resamp should be sum of what you want   |
+|            jak=1, boot=2, sym=4 relative-bremer    |
+|            (rbr)=0.1, bremer(br)=0.2               |
+|            i.e rbr+br+jak+boot+sym=7.3 (default)   |
+|          - prefix can be empty, or a string        |
+|            default is empty                        |
+\----------------------------------------------------/;
   proc/; 
 end
 
 /*Basic settings*/
 taxname+1000;
 taxname=;
-mxram 500;
+mxram 10240;
 if(argnumber>=2)
   nstates %2;
 else
@@ -51,19 +53,19 @@ nstates NOGAPS;
 if(argnumber>2 )
   if (eqstring [ %3 ew ])
     quote Equal weighting is used;
-    if (argnumber>=4)
-      if (%4!=0)
-        quote Warning: equal weighting %4 should be fullfilled with 0;
-      end
+    if ((argnumber>=4) && (%4 != 0))
+      errmsg equal weighting %4 should be fullfilled with 0;
     end	
-  end
+  else
   if ((eqstring [ %3 iw ]) || (eqstring [ %3 eiw ]))
     if (argnumber>=4)
       piwe=%4;
     else
       piwe=12;
     end
-  end
+  else
+    errmsg %3 must be ew iw or eiw;
+  end end
 else
   piwe=12;
 end
@@ -73,124 +75,211 @@ procedure %1;
 hold 10000;
 
 /*Report what will be done*/
-quote -   /-----------------------------------------------\;
+quote 
+/-----------------------------------------------\;
 if(argnumber>2)
   if (eqstring [ %3 iw ])
     if (argnumber>3)
-quote -   |    Implied weighting will be used, K is %4.    |;
+      quote
+|    Implied weighting will be used, K is %4.    |;
     else
-quote -   |    Implied weighting will be used, K is 12.    |;
+      quote
+|    Implied weighting will be used, K is 12.    |;
     end
-  end
+  else
   if (eqstring [ %3 eiw ])
     if (argnumber>3)
-quote -   |    Ex-implied weighting will be used, K is %4. |;
+      quote
+|    Ex-implied weighting will be used, K is %4. |;
     else
-quote -   |    Ex-implied weighting will be used, K is 12. |;
+      quote
+|    Ex-implied weighting will be used, K is 12. |;
     end
-  end
+  else
   if (eqstring [ %3 ew ])
-quote -   |    Equal weighting will be used.               |;
-  end
+    quote
+|    Equal weighting will be used.               |;
+  else
+    errmsg %3 must be ew iw or eiw;
+  end end end
 else
-quote -   |    Ex-implied weighting will be used, K is 12. |;
+  quote
+|    Ex-implied weighting will be used, K is 12. |;
 end
 if (ntax<=25)
-quote -   |    Implicit enumeration will be performed.     |;
-end
+  quote
+|    Implicit enumeration will be performed.     |;
+else
 if ((ntax>25) && (ntax < 75))
-quote -   |    TBR Mult will be performed.                 |;
-end
+  quote
+|    TBR Mult will be performed.                 |;
+else
 if (ntax>=75)
-quote -   |    Xmult will be performed.                    |;
-end
-if (argnumber>=5)
+  quote
+|    Xmult will be performed.                    |;
+end end end
+
+if (argnumber<=5)
+  quote
+|    Strict consensus will be used.              |;
+else
+if (( %6 != 0.1 )||( %6 != 0.2 )||( %6 != 0.3 )||( %6!=1.1 )||( %6 !=1.2 )||( %6 !=1.3 )||( %6 != 2.1 )||( %6 != 2.2 )||( %6 != 2.3 )||( %6 != 3.1 )||( %6 != 3.2 )||( %6 != 3.3 )||( %6 != 4.1 )||( %6 != 4.2 )||( %6 != 4.3 )||( %6 != 5.1 )||( %6 != 5.2 )||( %6 != 5.3 )||( %6 != 6.1 )||( %6 != 6.2 )||( %6 != 6.3 )||( %6 != 7.1 )||( %6 != 7.2 )||( %6 != 7.3 ))
+  if (!(eqstring [ %5 str ]))
+    errmsg Bremer support or relative bremer support must use strict consensus;
+  end
+  quote
+|    Strict consensus will be used.              |;
+else
   if (eqstring [ %5 mjr ])
-quote -   |    Majority-rule consensus will be used.       |;
-  end
+    quote
+|    Majority-rule consensus will be used.       |;
+  else
   if (eqstring [ %5 hlf ])
-quote -   |    Half strict consensus will be used.         |;
-  end
+    quote
+|    Half strict consensus will be used.         |;
+  else
   if(eqstring [ %5 str ])
-quote -   |    Strict consensus will be used.              |;
-  end
-end
-if (argnumber<5)
-quote -   |    Strict consensus will be used.              |;
-end
+    quote
+|    Strict consensus will be used.              |;
+  else
+    errmsg %5 must be mjr hlf or str;
+  end end end
+end end
+
 if (argnumber>=6)
-  if (%6==1)
-quote -   |    Jackknifing                                 |;
-  end
-  if (%6==2)
-quote -   |    Bootstrap                                   |;
-  end
-  if (%6==3)
-quote -   |    Jackknifing and bootstrap                   |;
-  end
-  if (%6==4)
-quote -   |    Relative bremer support                     |;
-  end
-  if (%6==5)
-quote -   |    Jackknifing and bremer support              |;
-  end
-  if (%6==6)
-quote -   |    Bootstrap and bremer support                |;
-  end
-  if (%6==7)
-quote -   |    Jackknifing, bootstrap and bremer support   |;
-  end
-  if (%6==8)
-quote -   |    Symmetric resampling                        |;
-  end
-  if (%6==9)
-quote -   |    Jackknifing and symmetric resampling        |;
-  end
-  if (%6==10)
-quote -   |    Bootstrap and symmetric resampling          |;
-  end
-  if (%6==11)
-quote -   |    Jackknifing, bootstrap and symmetric        |;
-quote -   |        resampling                              |;
-  end
-  if (%6==12)
-quote -   |    Symmetric resampling and bremer support     |;
-  end
-  if (%6==13)
-quote -   |    Jackknifing, symmetric resampling and       |;
-quote -   |        bremer support                          |;
-  end
-  if (%6==14)
-quote -   |    Bootstrap, symmetric resampling and         |;
-quote -   |        bremer support                          |;
-  end
-  if (%6==15)
-quote -   |    Jackknifing, bootstrap, symmetric           |;
-quote -   |        resampling and bremer support           |;
-  end
+  if ( (%6>0) && (%6<1) )
+    if (%6==0.1 || %6==0.3)
+      quote
+|    relative bremer support                     |;
+    else
+    if (%6==0.2 || %6==0.3)
+      quote
+|    bremer support                              |;
+    end end
+  else
+  if ((%6>=1) && (%6<2))
+    quote
+|    Jackknifing                                 |;
+    if (%6==1.1 || %6==1.3)
+      quote
+|    relative bremer support                     |;
+    else
+    if (%6==1.2 || %6==1.3)
+      quote
+|    bremer support                              |;
+    end end
+  else
+  if ((%6>=2) && (%6<3))
+    quote
+|    Bootstrap                                   |;
+    if (%6==2.1 || %6==2.3)
+      quote
+|    relative bremer support                     |;
+    else
+    if (%6==2.2 || %6==2.3)
+      quote
+|    bremer support                              |;
+    end end
+  else
+  if ((%6>=3) && (%6<4))
+    quote
+|    Jackknifing and bootstrap                   |;
+    if (%6==3.1 || %6==3.3)
+      quote
+|    relative bremer support                     |;
+    else
+    if (%6==3.2 || %6==3.3)
+      quote
+|    bremer support                              |;
+    end end
+  else
+  if ((%6>=4) && (%6<5))
+    quote
+|    Symmetric resampling                        |;
+    if (%6==4.1 || %6==4.3)
+      quote
+|    relative bremer support                     |;
+    else
+    if (%6==4.2 || %6==4.3)
+      quote
+|    bremer support                              |;
+    end end
+  else
+  if ((%6>=5) && (%6<6))
+    quote
+|    Jackknifing and symmetric resampling        |;
+    if (%6==5.1 || %6==5.3)
+      quote
+|    relative bremer support                     |;
+    else
+    if (%6==5.2 || %6==5.3)
+      quote
+|    bremer support                              |;
+    end end
+  else
+  if ((%6>=6) && (%6<7))
+    quote
+|    Bootstrap and symmetric resampling          |;
+    if (%6==6.1 || %6==6.3)
+      quote
+|    relative bremer support                     |;
+    else
+    if (%6==6.2 || %6==6.3)
+      quote
+|    bremer support                              |;
+    end end
+  else
+  if ((%6>=7) && (%6<8))
+    quote
+|    Jackknifing, bootstrap and symmetric        |
+|    resampling                                  |;
+    if (%6==7.1 || %6==7.3)
+      quote
+|    relative bremer support                     |;
+    else
+    if (%6==7.2 || %6==7.3)
+      quote
+|    bremer support                              |;
+    end end 
+  else
+    errmsg Mistake %6 value;
+  end end end end end end end end
 end
 if (argnumber<6)
-quote -   |    Jackknifing, bootstrap, symmetric           |;
-quote -   |        resampling and bremer support           |;
+  quote
+|        relative bremer support, bremer support |
+|        jackknifing, bootstrap, symmetric       |
+|        resampling                              |;
 end
-quote -   |        will be shown on the resample.svg.      |;
-quote -   |    Apomorphic characters mapping will be shown |;
-quote -   |        on the apo.svg and saved to apo*.tre.   |;
-quote -   |    TL, CI and RI will be calculated finally.   |;
-quote -   \------------------------------------------------/;
+quote
+|        will be shown on the resample.svg.      |
+|    Apomorphic characters mapping will be shown |
+|        on the apo.svg and saved to apo*.tre.   |
+|    TL, CI and RI will be calculated finally.   |
+\------------------------------------------------/;
 
 /*Implied weighting settings*/
 if(argnumber>2)
   if (eqstring [ %3 iw ])
     piwe&;
-  end
+  else
   if (eqstring [ %3 eiw ])
     xpiwe(*;
+    log %7.eiw.log;
     piwe&;
-  end
+    log/;
+    log + %7.tnt.log;
+  else
+  if (eqstring [ %3 ew ])
+  else
+    errmsg %3 must be ew iw or eiw;
+  end end end
 else
   xpiwe(*;
+  log %7.eiw.log;
   piwe&;
+  log/;
+  log+ %7.tnt.log;
 end
 
 /*Search trees*/
@@ -202,11 +291,11 @@ if(argnumber>2)
       if (ntax<=74)
         mult=replic 1000 tbr hold 1000;
         bbreak=tbr fill;
-      end
+      else
       if (ntax>74)
         sect: slack 40; 
         xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
-      end
+      end end
     end
   else
     if (ntax<=74)
@@ -234,24 +323,159 @@ taxname=;
 tsave = %7.trees.ctf;
 tsave *= %7.trees.tnt.tre;
 
-/*Consensus tree*/
-if (argnumber<=4)
-  nelsen *;
+/*Get npars number*/
+var: npars;
+set npars ntrees;
+
+/*Get rbr/br/jak/boot/sym support and get consensus tree*/
+ttags=;
+ttags]; /*in one line*/
+
+/*    jak=1,		boot=2,		sym=4,		*/
+/*    jak+boot=3,					*/
+/*    jak+sym=5,	boot+sym=6,			*/
+/*    jak+boot+sym=7,  					*/
+
+/*    bremer=0.1,	relative-bremer=0.2		*/
+/*    bremer+relative-bremer=0.3			*/
+
+if (argnumber<=5)
+
+  /*bremer search*/
+  sub 1; hold +1000; bbreak=fill;
+  sub 3; hold +3000; bbreak=fill;
+  sub 5; hold +5000; bbreak=fill;
+  sub 7; hold +7000; bbreak=fill;
+
+  /*get the consensus tree number*/
+  var: nsubpars;
+  set nsubpars ntrees;
+
+  /*save strict consensus tree for bremer*/
+  hold+1;
+  bs * 0.'nsubpars';
+
+  /*calculate relative bremer support*/
+  bs [ 0.'nsubpars' ;
+
+  /*set the br value float*/
+  macfloat 2;
+
+  /*calculate bremer support*/
+  bsupport 0.'nsubpars';
+
+  /*choose final tree*/
+  tchoose/;
+
+  /*jakknifing*/
+  resample jak replications 1000 from 0; /*from 0 will orphan other trees*/
+  /*bootstrap*/
+  resample boot replications 1000 from 0;
+  /*symmetric resampling*/
+  resample sym replications 1000 from 0;
 else
-  if (eqstring [ %5 str ])
-    nelsen *;
+
+  if(( %6 == 0.1 )||( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.2 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.2 )||( %6 == 7.3 )) /*bremer support related can only use strict consensus*/
+
+    /*bremer search*/
+    sub 1; hold +1000; bbreak=fill;
+    sub 3; hold +3000; bbreak=fill;
+    sub 5; hold +5000; bbreak=fill;
+    sub 7; hold +7000; bbreak=fill;
+
+    /*get the consensus tree number*/
+    var: nsubpars;
+    set nsubpars ntrees;
+
+    /*save strict consensus tree for bremer*/
+    hold+1;
+    bs * 0.'nsubpars';
+
+    if(( %6 == 0.1 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.3 ))
+      /*calculate relative bremer support*/
+      bs [ 0.'nsubpars';
+    end
+
+    if(( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.2 )||( %6 ==1.3 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.2 )||( %6 == 7.3 ))
+
+      /*set the br value float*/
+      macfloat 2;
+
+      /*calculate bremer support*/
+      bsupport 0.'nsubpars';
+    end
+
+    /*choose final tree*/
+    tchoose/;
+
+    /*jackknifing*/
+    if((%6 == 1.1) || (%6 == 1.2) || (%6 == 1.3) || (%6 == 3.1) || (%6 == 3.2) || (%6 == 3.3) || (%6 == 5.1) || (%6 == 5.2) || (%6 == 5.3) || (%6 == 7.1) || (%6 == 7.2) || (%6 == 7.3))
+      resample jak replications 1000 from 0;
+    end
+
+    /*bootstrap*/
+    if((%6 == 2.1) || (%6 == 2.2) || (%6 == 2.3) || (%6 == 3.1) || (%6 == 3.2) || (%6 == 3.3) || (%6 == 6.1) || (%6 == 6.2) || (%6 == 6.3) || (%6 == 7.1) || (%6 == 7.2) || (%6 == 7.3))
+      resample boot replications 1000 from 0;
+    end
+
+    /*symmetric resampling*/
+    if((%6 == 4.1) || (%6 == 4.2) || (%6 == 4.3) || (%6 == 5.1) || (%6 == 5.2) || (%6 == 5.3) || (%6 == 6.1) || (%6 == 6.2) || (%6 == 6.3) || (%6 == 7.1) || (%6 == 7.2) || (%6 == 7.3))
+      resample sym replications 1000 from 0;
+    end
+
+  else /*non-bremer related should be consensus firstly*/
+
+    if (eqstring [ %5 str ])
+      nelsen * 0.'npars';
+    else
+    if (eqstring [ %5 mjr ])
+      majority * 0.'npars';
+    else
+    if (eqstring [ %5 hlf ])
+      comcomp * 0.'npars';
+    else
+      errmsg %5 must be mjr hlf or str;
+    end end end
+
+    /*choose the final tree: consenus tree*/
+    tchoose/;
+
+    /*jackkinfing*/
+    if((%6==1) || (%6==3) || (%6==5) || (%6==7))
+      resample jak replications 1000 from 0;
+    end
+
+    /*bootstrap*/
+    if((%6==2) || (%6==3) || (%6==6) || (%6==7))
+      resample boot replications 1000 from 0;
+    end
+
+    /*symmetric resampling*/
+    if((%6==4) || (%6==5) || (%6==6) || (%6==7))
+      resample sym replications 1000 from 0;
+    end
+
   end
-  if (eqstring [ %5 mjr ])
-    majority *;
-  end
-  if (eqstring [ %5 hlf ])
-    comcomp *;
-  end
+
+  /*Tree vault store*/
+  hold /+0; 
+  tvault >/;
+
 end
 
-/*Tree vault store*/
-hold /+0;
-tvault >/;
+/*Export consensus tree with supports*/
+ttags & %7.resample.svg thickness 7 italics fontsize 15;
+log %7.resample.log;
+quote /-------------resample tags start---------------\;
+ttags/;
+quote \-------------resample tags stop----------------/;
+log/;
+log + %7.tnt.log;
+export < %7.resample.tre;
+taxname-;
+export - %7.resample_no.tre;
+ttags-;
+taxname=;
 
 /*Export consensus tree*/
 tchoose /;
@@ -261,16 +485,33 @@ export - %7.original_no.tre;
 tsave = %7.original.ctf;
 tsave *= %7.original.tnt.tre;
 
+/*Apomorphic characters*/
+export = %7.winclada.tre;
+taxname =;
+ttags=;
+apo >0;
+log %7.apo.log;
+quote /-----------apomorphy tags start --------------\;
+ttags/;
+quote \-----------apomorphy tags stop ---------------/;
+log/;
+log + %7.tnt.log;
+ttags & %7.apo.svg thickness 7 italics fontsize 15;
+export < %7.apo.tre;
+taxname-;
+export - %7.apo_no.tre;
+ttags-;
+
+/*Character Analysis*/
+log %7.homo.log;
+chomo;
+cscores;
+log/;
+log + %7.tnt.log;
+
 /*Caulculate TL/CI/RI score*/
 report-;
-var-;
-var =
- 0 themin
- 1 themax
- 2 CI
- 3 RI
- 4 TL
-;
+var: themin themax CI RI TL ;
 set themin minsteps;
 set themax maxsteps;
 set TL length[0];
@@ -278,188 +519,182 @@ set CI 'themin'/'TL'; /*CI=1 means no homoplasy*/
 set RI ('themax'-'TL')/('themax'-'themin'); /*RI=1 character fits perfetcly*/
 report=;
 
-/*Apomorphic characters*/
-export = %7.winclada.tre;
-taxname =;
-ttags=;
-apo >0;
-quote -         /----------------------------------------------\;
-quote -                     apomorphy tags start                ;
-ttags/;
-quote -                     apomorphy tags stop                 ;
-quote -         \----------------------------------------------/;
-ttags & %7.apo.svg thickness 7 italics fontsize 15;
-export < %7.apo.tre;
-taxname-;
-export - %7.apo_no.tre;
-ttags-;
-
-/*Get jak/boot/bremer support*/
-tchoose/;
-ttags=;
-ttags]; /*in one line*/
-
-/*    jak=1,		boot=2,		bremer=4,	*/
-/*    jak+boot=3,					*/
-/*    jak+brember=5,	boot+bremer=6,			*/
-/*    jak+boot+bremer=7,  				*/
-/*    sym=8,						*/
-/*    jak+sym=9,	boot+sym=10,	bremer+sym=12   */
-/*    jak+boot+sym=11,	jak+bremer+sym=13,		*/
-/*    boot+bremer+sym=14,				*/
-/*    jak+sym+boot+bremer=15				*/
-
-if (argnumber<=5)
-  /*jakknifing*/
-  resample jak replications 1000 from 0;
-  /*bootstrap*/
-  resample boot replications 1000 from 0;
-  /*symmetric resampling*/
-  resample sym replications 1000 from 0;
-  /*bremer*/
-  sub 1; hold +1000; bbreak=fill;
-  sub 3; hold +3000; bbreak=fill;
-  sub 5; hold +5000; bbreak=fill;
-  sub 7; hold +7000; bbreak=fill;
-  bsupport!!0;
-else
-  if((%6==1) || (%6==3) || (%6==5) || (%6==7) || (%6==9) || (%6==11) || (%6==13) || (%6==15))
-    resample jak replications 1000 from 0;
-  end
-  
-  if((%6==2) || (%6==3) || (%6==6) || (%6==7) || (%6==10) || (%6==11) || (%6==14) || (%6==15))
-    resample boot replications 1000 from 0;
-  end
-
-  if((%6==8) || (%6==9) || (%6==10) || (%6==11) || (%6==12) || (%6==13) || (%6==14) || (%6==15))
-    resample sym replications 1000 from 0;
-  end
-
-  if((%6==4) || (%6==5) || (%6==6) || (%6==7) || (%6==12) || (%6==13) || (%6==14) || (%6==15))
-    sub 1; hold +1000; bbreak=fill;
-    sub 3; hold +3000; bbreak=fill;
-    sub 5; hold +5000; bbreak=fill;
-    sub 7; hold +7000; bbreak=fill;
-    bsupport!!0;
-  end
-end
-
-/*Export consensus tree with supports*/
-ttags & %7.resample.svg thickness 7 italics fontsize 15;
-quote -         /----------------------------------------------\;
-quote -                       resample tags start               ;
-ttags/;
-quote -                       resample tags stop                ;
-quote -         \----------------------------------------------/;
-export < %7.resample.tre;
-taxname-;
-export - %7.resample_no.tre;
-ttags-;
-
 /*Report CI/RI/TL */
+log %7.report.log;
 macfloat 3;
 quote Consistency Index (CI) is 'CI';
 quote Retention Index (RI) is 'RI';
 quote Tree Length (TL) is 'TL';
+log/;
+log + %7.tnt.log;
 
 /*Report*/
-quote -         /----------------------------------------------\;
-quote -         |      The analysis has been finished.         |;
-quote -         |      The file `tnt.log` contains             |;
-quote -         |          K, TL, CI and RI                    |;
-quote -         |      The file `trees*.tre` contain           |;
-quote -         |          trees found by mult and xmult       |;
-quote -         |      The file `original*.tre` contain        |;
-quote -         |          strict consensus tree without label |;
-quote -         |      The file `resample*.tre` contain        |;
-quote -         |          consensus tree with support         |;
-quote -         |      The file `apo*.tre` contain             |;
-quote -         |          tree with apomorphic character      |;
-quote -         |      The file `*_no.tre` contain             |;
-quote -         |          tree with `taxname-`                |;
-quote -         |      The file `*.ctf` tree file is           |;
-quote -         |          only readable for TNT               |;
-quote -         |      The file `*.tnt.tre` contain            |;
-quote -         |          is the ctf file with taxname        |;
-quote -         |      The file `resample.svg` contain         |;
+quote 
+/----------------------------------------------\
+|      The analysis has been finished.         |
+|      The file `tnt.log` contains             |
+|          K, TL, CI and RI                    |
+|      The file `trees*.tre` contain           |
+|          trees found by mult and xmult       |
+|      The file `original*.tre` contain        |
+|          strict consensus tree without label |
+|      The file `resample*.tre` contain        |
+|          consensus tree with support         |
+|      The file `apo*.tre` contain             |
+|          tree with apomorphic character      |
+|      The file `*_no.tre` contain             |
+|          tree with `taxname-`                |
+|      The file `*.ctf` tree file is           |
+|          only readable for TNT               |
+|      The file `*.tnt.tre` contain            |
+|          is the ctf file with taxname        |
+|      The file `resample.svg` contain         |;
 
 
-if (argnumber>=5) 
-  if(eqstring [ %5 mjr ])
-quote -         |          majority rule consensus tree with   |;
-  end
-  if(eqstring [ %5 hlf ])
-quote -         |          half strict consensus tree with     |;
-  end
+if (argnumber<=5)
+  quote
+|          strict consensus tree with          |;
+else
+if ( (argnumber >=6) && (( %6 == 0.1 )||( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.2 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.2 )||( %6 == 7.3 )) )
+  quote
+|          strict consensus tree with          |;
+else
+  if (eqstring [ %5 mjr ])
+    quote
+|          majority-rule consensus tree with   |;
+  else
+  if (eqstring [ %5 hlf ])
+    quote
+|          half strict consensus tree with     |;
+  else
   if(eqstring [ %5 str ])
-quote -         |          strict consensus tree with          |;
-  end
+    quote
+|          strict consensus tree with          |;
+  else
+    errmsg %5 must be mjr hlf or str;
+    errmsg Bremer support or relative bremer support must use strict consensus;
+  end end end
+end end
+
+if (argnumber>=6)
+  if ( (%6>0) && (%6<1) )
+    if (%6==0.1 || %6==0.3)
+      quote
+|          relative bremer support             |;
+    else
+    if (%6==0.2 || %6==0.3)
+      quote    
+|          bremer support                      |;
+    end end
+  else
+  if ((%6>=1) && (%6<2))
+    if (%6==1.1 || %6==1.3)
+      quote
+|          relative bremer support             |;
+    else
+    if (%6==1.2 || %6==1.3)
+      quote
+|          bremer support                      |;
+    end end
+      quote
+|          jackknifing                         |;
+  else
+  if ((%6>=2) && (%6<3))
+    if (%6==2.1 || %6==2.3)
+      quote
+|          relative bremer support             |;
+    else
+    if (%6==2.2 || %6==2.3)
+      quote
+|          bremer support                      |;
+    end end
+      quote
+|          bootstrap                           |;
+  else
+  if ((%6>=3) && (%6<4))
+    if (%6==3.1 || %6==3.3)
+      quote
+|          relative bremer support             |;
+    else
+    if (%6==3.2 || %6==3.3)
+      quote
+|          bremer support                      |;
+    end end
+    quote
+|          jackknifing, bootstrap              |;
+  else
+  if ((%6>=4) && (%6<5))
+    if (%6==4.1 || %6==4.3)
+      quote
+|          relative bremer support             |;
+    else
+    if (%6==4.2 || %6==4.3)
+      quote
+|          bremer support                      |;
+    end end
+    quote
+|          symmetric resampling                |;
+  else
+  if ((%6>=5) && (%6<6))
+    if (%6==5.1 || %6==5.3)
+      quote
+|          relative bremer support             |;
+    else
+    if (%6==5.2 || %6==5.3)
+      quote
+|          bremer support                      |;
+    end end
+    quote
+|          jackknifing, symmetric resampling   |; 
+  else
+  if ((%6>=6) && (%6<7))
+    if (%6==6.1 || %6==6.3)
+      quote
+|          relative bremer support             |;
+    else
+    if (%6==6.2 || %6==6.3)
+      quote
+|          bremer support                      |;
+    end end
+    quote
+|          bootstrap, symmetric resampling     |;
+  else
+  if ((%6>=7) && (%6<8))
+    if (%6==7.1 || %6==7.3)
+      quote
+|          relative bremer support             |;
+    else
+    if (%6==7.2 || %6==7.3)
+      quote
+|          bremer support                      |;
+    end end
+    quote
+|          jackknifing, bootstrap, symmetric   |
+|          resampling                          |;
+  else
+    errmsg Mistake %6 value;
+  end end end end end end end end
 else
-quote -         |          strict consensus tree with          |;
+  quote
+|          relative bremer support, bremer     |
+|          support, jackknifing, bootstrap,    |
+|          symmetric resampling                |;
 end
 
-if (argnumber>=6) 
-  if (%6==1)
-quote -         |          jackknifing                         |;
-  end
-  if (%6==2)
-quote -         |          bootstrap                           |;
-  end
-  if (%6==3)
-quote -         |          jackknifing and bootstrap           |;
-  end
-  if (%6==4)
-quote -         |          bremer support                      |;
-  end
-  if (%6==5)
-quote -         |          jackknifing and bremer support      |;
-  end
-  if (%6==6)
-quote -         |          bootstrap and bremer support        |;
-  end
-  if (%6==7)
-quote -         |          jackknifing, bootstrap and          |;
-quote -         |          bremer support                      |;
-  end
-  if (%6==8)
-quote -         |          symmetric resampling                |;
-  end
-  if (%6==9)
-quote -         |          Jackknifing and symmetric resample  |;
-  end
-  if (%6==10)
-quote -         |          Bootstrap and symmetric resample    |;
-  end
-  if (%6==11)
-quote -         |          jackknifing, bootstrap and          |;
-quote -         |          symmetric resample                  |;
-  end
-  if (%6==12)
-quote -         |          bremer support and symmetric        |;
-quote -         |          resample                            |;
-  end
-  if (%6==13)
-quote -         |          Jackknifing, symmetric resample and |;
-quote -         |          bremer support                      |;
-  end
-  if (%6==14)
-quote -         |          bootstrap, symmetric resmaple and   |;
-quote -         |          bremer support                      |;
-  end
-  if (%6==15)
-quote -         |          jackknifing, bootstrap, symmetric   |;
-quote -         |          resample and bremer support         |;
-  end
-else
-quote -         |          jackknifing, bootstrap, symmetric   |;
-quote -         |          resample and bremer support         |;
-end
-
-quote -         |      The file `apo.svg` contain the          |;
-quote -         |          tree with apomorphy mapping         |;
-quote -         |      The file `winclada.tre` can be          |;
-quote -         |          converted by tnt2winclada           |;
-quote -         \----------------------------------------------/;
+quote
+|      The file `apo.svg` contains the         |
+|          tree with apomorphy mapping         |
+|      The file `report.log` contains the      |
+|          CI RI TL publish-needed info        |
+|      The file `resample/apo.log` contain the |
+|          tree tags in text                   |
+|      The file `homo.log` contain the report  |
+|          of character homoplasy              |
+|      The file `eiw.log` contain the report   |
+|          of character concavities            |
+|      The file `winclada.tre` can be          |
+|          converted by tnt2winclada           |
+\----------------------------------------------/;
 
 /*Quit*/
 zzz;
