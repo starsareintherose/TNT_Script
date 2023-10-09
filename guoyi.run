@@ -289,7 +289,7 @@ if(argnumber>2)
       ienum;
     else
       if (ntax<=74)
-        mult=replic 1000 tbr hold 1000;
+        mult=replic 1000 tbr hold 10;
         bbreak=tbr fill;
       else
       if (ntax>74)
@@ -299,7 +299,7 @@ if(argnumber>2)
     end
   else
     if (ntax<=74)
-      mult=replic 1000 tbr hold 1000;
+      mult=replic 1000 tbr hold 10;
       bbreak=tbr fill;
     else
       sect: slack 40;
@@ -307,10 +307,10 @@ if(argnumber>2)
     end
   end  
 else
-  mult=replic 1000 tbr hold 1000;
+  mult=replic 1000 tbr hold 10;
   bbreak=tbr fill;
   if (ntax>74)
-    sect: slack 1000;
+    sect: slack 40;
     xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
   end
 end
@@ -353,13 +353,13 @@ if (argnumber<=5)
   set contree ntrees;
 
   /*calculate relative bremer support*/
-  bs ]!! 'contree' ;
+  bs ]!! 0;
 
   /*set the br value float*/
   macfloat 1;
 
   /*calculate bremer support*/
-  bsupport !! 'contree';
+  bsupport !! 0;
 
   /*choose final tree*/
   tchoose/;
@@ -390,7 +390,7 @@ else
 
     if(( %6 == 0.1 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.3 ))
       /*calculate relative bremer support*/
-      bs ]!! 'contree';
+      bs ]!! 0;
     end
 
     if(( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.2 )||( %6 ==1.3 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.2 )||( %6 == 7.3 ))
@@ -399,7 +399,7 @@ else
       macfloat 1;
 
       /*calculate bremer support*/
-      bsupport !! 'contree';
+      bsupport !! 0;
     end
 
     /*choose final tree*/
