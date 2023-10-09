@@ -257,6 +257,7 @@ if ('doboot')
 |    bootstrap                                   |;
 end
 if ('dosym')
+  quote
 |    symmetric resampling                        |;
 end
 
