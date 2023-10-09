@@ -319,9 +319,9 @@ end
 export= %7.trees.tre;
 taxname-;
 export= %7.trees_no.tre;
+tsave *= %7.trees.tnt.tre;
 taxname=;
 tsave = %7.trees.ctf;
-tsave *= %7.trees.tnt.tre;
 
 /*Get npars number*/
 var: npars;
@@ -341,34 +341,31 @@ ttags]; /*in one line*/
 
 if (argnumber<=5)
 
-  /*bremer search*/
-  sub 1; hold +1000; bbreak=fill;
-  sub 3; hold +3000; bbreak=fill;
-  sub 5; hold +5000; bbreak=fill;
-  sub 7; hold +7000; bbreak=fill;
-
-  /*adjust to zero following Goloboff*/
-  sub 0;
-  
-  /*get the consensus tree number*/
-  var: nsubpars;
-  set nsubpars ntrees;
+  /*set value of suboptimal from most parsimony tree */
+  sub: 0;
 
   /*save strict consensus tree for bremer*/
   hold+1;
-  bs * 0.'nsubpars';
+  nelsen * 0.'npars';
+
+  /*get the consensus tree number*/
+  var: contree;
+  set contree ntrees;
 
   /*calculate relative bremer support*/
-  bs [ 0.'nsubpars' ;
+  bs ]!! 'contree' ;
 
   /*set the br value float*/
-  macfloat 2;
+  macfloat 1;
 
   /*calculate bremer support*/
-  bsupport 0.'nsubpars';
+  bsupport !! 'contree';
 
   /*choose final tree*/
   tchoose/;
+
+  /*adjust to zero following Pablo Goloboff*/
+  sub 0;
 
   /*jakknifing*/
   resample jak replications 1000 from 0; /*from 0 will orphan other trees*/
@@ -380,39 +377,36 @@ else
 
   if(( %6 == 0.1 )||( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.2 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.2 )||( %6 == 7.3 )) /*bremer support related can only use strict consensus*/
 
-    /*bremer search*/
-    sub 1; hold +1000; bbreak=fill;
-    sub 3; hold +3000; bbreak=fill;
-    sub 5; hold +5000; bbreak=fill;
-    sub 7; hold +7000; bbreak=fill;
-
-    /*adjust to zero following Goloboff*/
-    sub 0;
-
-    /*get the consensus tree number*/
-    var: nsubpars;
-    set nsubpars ntrees;
+    /*set value of suboptimal from most parsimony tree*/
+    sub: 0;
 
     /*save strict consensus tree for bremer*/
     hold+1;
-    bs * 0.'nsubpars';
+    nelsen * 0.'npars';
+
+    /*get the consensus tree number*/
+    var: contree;
+    set contree ntrees;
 
     if(( %6 == 0.1 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.3 ))
       /*calculate relative bremer support*/
-      bs [ 0.'nsubpars';
+      bs ]!! 'contree';
     end
 
     if(( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.2 )||( %6 ==1.3 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.2 )||( %6 == 7.3 ))
 
       /*set the br value float*/
-      macfloat 2;
+      macfloat 1;
 
       /*calculate bremer support*/
-      bsupport 0.'nsubpars';
+      bsupport !! 'contree';
     end
 
     /*choose final tree*/
     tchoose/;
+
+    /*adjust to zero following Pablo Goloboff*/
+    sub 0;
 
     /*jackknifing*/
     if((%6 == 1.1) || (%6 == 1.2) || (%6 == 1.3) || (%6 == 3.1) || (%6 == 3.2) || (%6 == 3.3) || (%6 == 5.1) || (%6 == 5.2) || (%6 == 5.3) || (%6 == 7.1) || (%6 == 7.2) || (%6 == 7.3))
