@@ -510,7 +510,7 @@ else
 if ('doeiw')
   quote
 |          under extended implied weighting,   |
-|          K value is 'kvalue'                 |;
+|          K value is 'kvalue'                       |;
 end end end
 
 quote
