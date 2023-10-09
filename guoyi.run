@@ -2,7 +2,7 @@ macro=;
 
 log %7.tnt.log;
 
-/*Arguments*/
+/*primary notification*/
 if ( (argnumber == 0) || (argnumber >7) )
   silent -console;
   quote 
@@ -38,6 +38,146 @@ if ( (argnumber == 0) || (argnumber >7) )
   proc/; 
 end
 
+/*Var for handling args*/
+var: 
+  dojak doboot dosym dobrs dorbrs rsmp dobremer 
+  dostr domjr dohlf
+  doew doiw doeiw dowt wttype
+  kvalue
+  search;
+
+set dojak 0; set doboot 0; set dosym 0; set dobrs 0; set dorbrs 0; set rsmp 0; set dobremer 0;
+set dostr 0; set domjr 0; set dohlf 0;
+set doew 0; set doiw 0; set doeiw 0; set dowt 0; set wttype 0;
+set kvalue 12;
+set search 0;
+
+/*handle weighting type*/
+if (argnumber>=3)
+  if (eqstring [ %3 ew ])
+    set doew 1;
+    set wttype 1;
+  else
+  if (eqstring [ %3 iw ])
+    set doiw 1;
+    set wttype 2;
+  else
+  if (eqstring [ %3 eiw ])
+    set doeiw 1;
+    set wttype 3;
+  else
+    errmsg Weighting type must be ew, iw or eiw;
+  end end end
+else
+  set doeiw 1;
+  set wttype 3;
+end
+
+if ('doiw' || 'doeiw')
+  set dowt 1;
+end
+
+/*handle k value*/
+if (argnumber>=4)
+  set kvalue %4;
+  if ( 'doew' && ('kvalue' != 0))
+    errmsg Equal weighting (ew) must be followed with 0 instead of 'kvalue';
+  end
+end
+
+/*handle resmaple type*/
+if (argnumber<6)
+  set dojak 1; set doboot 1; set dosym 1; set dorbrs 1;
+else
+  set rsmp %6;
+  loop 1 5
+  if ('rsmp' >= 4)
+    set dosym 1;
+    set rsmp 'rsmp'-4;
+  else
+  if ('rsmp' >= 2)
+    set doboot 1;
+    set rsmp 'rsmp'-2;
+  else
+  if ('rsmp' >= 1)
+    set dojak 1;
+    set rsmp 'rsmp'-1;
+  else
+  if ('rsmp' >=0.2)
+    set dobrs 1;
+    set rsmp 'rsmp'-0.2;
+  else
+  if ('rsmp' >=0.1)
+    set dorbrs 1;
+    set rsmp 'rsmp'-0.1;
+  end end end end end
+  stop
+end
+
+if ('rsmp' != 0)
+  errmsg Input %6 is illegal;
+end
+
+if ('dobrs' || 'dorbrs')
+  set dobremer 1;
+end
+
+/*handle consensus type*/
+if (argnumber>=6)
+  if ('dobremer')
+    set dostr 1;
+    if (eqstring [ %5 str ])
+    else
+    if (eqstring [ %5 mjr ])
+        errmsg Bremer support or any bremer support variations must use strict consensus;
+    else
+    if (eqstring [ %5 hlf ])
+      errmsg Bremer support or any bremer support variations must use strict consensus;
+    else
+      errmsg Consensus type must be str mjr or hlf;
+    end end end
+  else
+    if (eqstring [ %5 str ])
+      set dostr 1;
+    else
+    if (eqstring [ %5 mjr ])
+      set domjr 1;
+    else
+    if (eqstring [ %5 hlf ])
+      set dohlf 1;
+    else
+      errmsg Consensus type must be str mjr or hlf;
+    end end end
+  end
+else
+if (argnumber==5)
+  if ((eqstring [ %5 mjr ]) || (eqstring [ %5 hlf ]))
+    errmsg Bremer support or any bremer support variations must use strict consensus;
+  else
+  if (eqstring [ %5 str ])
+    set dostr 1;
+  else
+    errmsg Consensus type must be str mjr or hlf;
+  end end
+else
+  set dostr 1;
+end end
+
+/*handle search*/
+if (ntax<=25)
+  if ('doeiw')
+    search=2;
+  else
+    search=1;
+  end
+else
+  if (ntax<75)
+    search=2
+  else
+    search=3
+  end
+end
+
 /*Basic settings*/
 taxname+1000;
 taxname=;
@@ -49,25 +189,9 @@ else
 end
 nstates NOGAPS;
 
-/*Set K*/
-if(argnumber>2 )
-  if (eqstring [ %3 ew ])
-    quote Equal weighting is used;
-    if ((argnumber>=4) && (%4 != 0))
-      errmsg equal weighting %4 should be fullfilled with 0;
-    end	
-  else
-  if ((eqstring [ %3 iw ]) || (eqstring [ %3 eiw ]))
-    if (argnumber>=4)
-      piwe=%4;
-    else
-      piwe=12;
-    end
-  else
-    errmsg %3 must be ew iw or eiw;
-  end end
-else
-  piwe=12;
+/*Set K*/ 
+if ('dowt')
+  piwe='kvalue';
 end
 
 /*Reopen tnt*/
@@ -77,180 +201,65 @@ hold 10000;
 /*Report what will be done*/
 quote 
 /-----------------------------------------------\;
-if(argnumber>2)
-  if (eqstring [ %3 iw ])
-    if (argnumber>3)
-      quote
-|    Implied weighting will be used, K is %4.    |;
-    else
-      quote
-|    Implied weighting will be used, K is 12.    |;
-    end
-  else
-  if (eqstring [ %3 eiw ])
-    if (argnumber>3)
-      quote
-|    Ex-implied weighting will be used, K is %4. |;
-    else
-      quote
-|    Ex-implied weighting will be used, K is 12. |;
-    end
-  else
-  if (eqstring [ %3 ew ])
-    quote
-|    Equal weighting will be used.               |;
-  else
-    errmsg %3 must be ew iw or eiw;
-  end end end
-else
+if ('wttype'==1)
   quote
-|    Ex-implied weighting will be used, K is 12. |;
-end
-if (ntax<=25)
+|    Equal weighting will be used.               |;
+else
+if ('wttype'==2)
+  quote
+|    Implied weighting will be used, K is 'kvalue'.    |;
+else
+if ('wttype'==3)
+  quote
+|    Ex-implied weighting will be used, K is 'kvalue'. |;
+end end end
+
+if ('search'==1)
   quote
 |    Implicit enumeration will be performed.     |;
 else
-if ((ntax>25) && (ntax < 75))
+if ('search'==2)
   quote
 |    TBR Mult will be performed.                 |;
 else
-if (ntax>=75)
+if ('search'==3)
   quote
 |    Xmult will be performed.                    |;
 end end end
 
-if (argnumber<=5)
+if ('dostr')
   quote
 |    Strict consensus will be used.              |;
 else
-if (( %6 == 0.1 )||( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.2 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.2 )||( %6 == 7.3 ))
-  if (!(eqstring [ %5 str ]))
-    errmsg Bremer support or relative bremer support must use strict consensus;
-  end
+if ('domjr')
   quote
-|    Strict consensus will be used.              |;
-else
-  if (eqstring [ %5 mjr ])
-    quote
 |    Majority-rule consensus will be used.       |;
-  else
-  if (eqstring [ %5 hlf ])
-    quote
-|    Half strict consensus will be used.         |;
-  else
-  if(eqstring [ %5 str ])
-    quote
-|    Strict consensus will be used.              |;
-  else
-    errmsg %5 must be mjr hlf or str;
-  end end end
-end end
-
-if (argnumber>=6)
-  if ( (%6>0) && (%6<1) )
-    if (%6==0.1 || %6==0.3)
-      quote
-|    relative bremer support                     |;
-    else
-    if (%6==0.2 || %6==0.3)
-      quote
-|    bremer support                              |;
-    end end
-  else
-  if ((%6>=1) && (%6<2))
-    quote
-|    Jackknifing                                 |;
-    if (%6==1.1 || %6==1.3)
-      quote
-|    relative bremer support                     |;
-    else
-    if (%6==1.2 || %6==1.3)
-      quote
-|    bremer support                              |;
-    end end
-  else
-  if ((%6>=2) && (%6<3))
-    quote
-|    Bootstrap                                   |;
-    if (%6==2.1 || %6==2.3)
-      quote
-|    relative bremer support                     |;
-    else
-    if (%6==2.2 || %6==2.3)
-      quote
-|    bremer support                              |;
-    end end
-  else
-  if ((%6>=3) && (%6<4))
-    quote
-|    Jackknifing and bootstrap                   |;
-    if (%6==3.1 || %6==3.3)
-      quote
-|    relative bremer support                     |;
-    else
-    if (%6==3.2 || %6==3.3)
-      quote
-|    bremer support                              |;
-    end end
-  else
-  if ((%6>=4) && (%6<5))
-    quote
-|    Symmetric resampling                        |;
-    if (%6==4.1 || %6==4.3)
-      quote
-|    relative bremer support                     |;
-    else
-    if (%6==4.2 || %6==4.3)
-      quote
-|    bremer support                              |;
-    end end
-  else
-  if ((%6>=5) && (%6<6))
-    quote
-|    Jackknifing and symmetric resampling        |;
-    if (%6==5.1 || %6==5.3)
-      quote
-|    relative bremer support                     |;
-    else
-    if (%6==5.2 || %6==5.3)
-      quote
-|    bremer support                              |;
-    end end
-  else
-  if ((%6>=6) && (%6<7))
-    quote
-|    Bootstrap and symmetric resampling          |;
-    if (%6==6.1 || %6==6.3)
-      quote
-|    relative bremer support                     |;
-    else
-    if (%6==6.2 || %6==6.3)
-      quote
-|    bremer support                              |;
-    end end
-  else
-  if ((%6>=7) && (%6<8))
-    quote
-|    Jackknifing, bootstrap and symmetric        |
-|    resampling                                  |;
-    if (%6==7.1 || %6==7.3)
-      quote
-|    relative bremer support                     |;
-    else
-    if (%6==7.2 || %6==7.3)
-      quote
-|    bremer support                              |;
-    end end 
-  else
-    errmsg Mistake %6 value;
-  end end end end end end end end
-end
-if (argnumber<6)
+else
+if ('dohlf')
   quote
-|        relative bremer support, bremer support |
-|        jackknifing, bootstrap, symmetric       |
-|        resampling                              |;
-end
+|    Half strict consensus will be used.         |;
+end end end
+
+if ('dorbrs')
+  quote
+|    relative bremer support                     |;
+else
+if ('dobrs')
+  quote
+|    bremer support                              |;
+else
+if ('dojak')
+  quote
+|    jackknifing                                 |;
+else
+if ('doboot')
+  quote
+|    bootstrap                                   |;
+else
+if ('dosym')
+|    symmetric resampling                        |;
+end end end end end
+
 quote
 |        will be shown on the resample.svg.      |
 |    Apomorphic characters mapping will be shown |
@@ -259,61 +268,29 @@ quote
 \------------------------------------------------/;
 
 /*Implied weighting settings*/
-if(argnumber>2)
-  if (eqstring [ %3 iw ])
-    piwe&;
-  else
-  if (eqstring [ %3 eiw ])
-    xpiwe(*;
-    log %7.eiw.log;
-    piwe&;
-    log/;
-    log + %7.tnt.log;
-  else
-  if (eqstring [ %3 ew ])
-  else
-    errmsg %3 must be ew iw or eiw;
-  end end end
+if ('doiw')
+  piwe&;
 else
+if ('doeiw')
   xpiwe(*;
   log %7.eiw.log;
   piwe&;
   log/;
-  log+ %7.tnt.log;
-end
+  log + %7.tnt.log;
+end end
 
 /*Search trees*/
-if(argnumber>2)
-  if(eqstring [ %3 ew ] || eqstring [ %3 iw ] )
-    if (ntax<=25)
-      ienum;
-    else
-      if (ntax<=74)
-        mult=replic 1000 tbr hold 10;
-        bbreak=tbr fill;
-      else
-      if (ntax>74)
-        sect: slack 40; 
-        xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
-      end end
-    end
-  else
-    if (ntax<=74)
-      mult=replic 1000 tbr hold 10;
-      bbreak=tbr fill;
-    else
-      sect: slack 40;
-      xmult=hit 50 replications 20 drift 20 ratchet 10 fuse 10 hold 1 keepall;
-    end
-  end  
+if ('search'==1)
+  ienum;
 else
+if ('search'==2)
   mult=replic 1000 tbr hold 10;
-  bbreak=tbr fill;
-  if (ntax>74)
-    sect: slack 40;
-    xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
-  end
-end
+  bbreak=tbr fill;        
+else
+if ('search'==3)
+  sect: slack 40; 
+  xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+end end end
 
 /*Export trees*/
 export= %7.trees.tre;
@@ -327,6 +304,21 @@ tsave = %7.trees.ctf;
 var: npars;
 set npars ntrees;
 
+/*Get consensus tree*/
+if ('dostr')
+  nelsen * 0.'npars';
+else
+if ('domjr')
+  majority * 0.'npars';
+else
+if ('dohlf')
+  comcomp * 0.'npars';
+end end end
+
+/*Get the consensus tree number*/
+var: contree;
+set contree ntrees;
+
 /*Get rbr/br/jak/boot/sym support and get consensus tree*/
 ttags=;
 ttags]; /*in one line*/
@@ -336,132 +328,51 @@ ttags]; /*in one line*/
 /*    jak+sym=5,	boot+sym=6,			*/
 /*    jak+boot+sym=7,  					*/
 
-/*    bremer=0.1,	relative-bremer=0.2		*/
+/*    relative-bremer=0.1,	bremer=0.2		*/
 /*    bremer+relative-bremer=0.3			*/
 
-if (argnumber<=5)
+if ('dobremer')
 
   /*set value of suboptimal from most parsimony tree */
   sub: 0;
 
-  /*save strict consensus tree for bremer*/
-  hold+1;
-  nelsen * 0.'npars';
-
-  /*get the consensus tree number*/
-  var: contree;
-  set contree ntrees;
-
   /*calculate relative bremer support*/
+  if ('dorbrs')
   bs ]!! 0;
-
-  /*set the br value float*/
-  macfloat 1;
-
-  /*calculate bremer support*/
-  bsupport !! 0;
-
-  /*choose final tree*/
-  tchoose/;
-
-  /*adjust to zero following Pablo Goloboff*/
-  sub 0;
-
-  /*jakknifing*/
-  resample jak replications 1000 from 0; /*from 0 will orphan other trees*/
-  /*bootstrap*/
-  resample boot replications 1000 from 0;
-  /*symmetric resampling*/
-  resample sym replications 1000 from 0;
-else
-
-  if(( %6 == 0.1 )||( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.2 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.2 )||( %6 == 7.3 )) /*bremer support related can only use strict consensus*/
-
-    /*set value of suboptimal from most parsimony tree*/
-    sub: 0;
-
-    /*save strict consensus tree for bremer*/
-    hold+1;
-    nelsen * 0.'npars';
-
-    /*get the consensus tree number*/
-    var: contree;
-    set contree ntrees;
-
-    if(( %6 == 0.1 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.3 ))
-      /*calculate relative bremer support*/
-      bs ]!! 0;
-    end
-
-    if(( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.2 )||( %6 ==1.3 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.2 )||( %6 == 7.3 ))
-
-      /*set the br value float*/
-      macfloat 1;
-
-      /*calculate bremer support*/
-      bsupport !! 0;
-    end
-
-    /*choose final tree*/
-    tchoose/;
-
-    /*adjust to zero following Pablo Goloboff*/
-    sub 0;
-
-    /*jackknifing*/
-    if((%6 == 1.1) || (%6 == 1.2) || (%6 == 1.3) || (%6 == 3.1) || (%6 == 3.2) || (%6 == 3.3) || (%6 == 5.1) || (%6 == 5.2) || (%6 == 5.3) || (%6 == 7.1) || (%6 == 7.2) || (%6 == 7.3))
-      resample jak replications 1000 from 0;
-    end
-
-    /*bootstrap*/
-    if((%6 == 2.1) || (%6 == 2.2) || (%6 == 2.3) || (%6 == 3.1) || (%6 == 3.2) || (%6 == 3.3) || (%6 == 6.1) || (%6 == 6.2) || (%6 == 6.3) || (%6 == 7.1) || (%6 == 7.2) || (%6 == 7.3))
-      resample boot replications 1000 from 0;
-    end
-
-    /*symmetric resampling*/
-    if((%6 == 4.1) || (%6 == 4.2) || (%6 == 4.3) || (%6 == 5.1) || (%6 == 5.2) || (%6 == 5.3) || (%6 == 6.1) || (%6 == 6.2) || (%6 == 6.3) || (%6 == 7.1) || (%6 == 7.2) || (%6 == 7.3))
-      resample sym replications 1000 from 0;
-    end
-
-  else /*non-bremer related should be consensus firstly*/
-
-    if (eqstring [ %5 str ])
-      nelsen * 0.'npars';
-    else
-    if (eqstring [ %5 mjr ])
-      majority * 0.'npars';
-    else
-    if (eqstring [ %5 hlf ])
-      comcomp * 0.'npars';
-    else
-      errmsg %5 must be mjr hlf or str;
-    end end end
-
-    /*choose the final tree: consenus tree*/
-    tchoose/;
-
-    /*jackkinfing*/
-    if((%6==1) || (%6==3) || (%6==5) || (%6==7))
-      resample jak replications 1000 from 0;
-    end
-
-    /*bootstrap*/
-    if((%6==2) || (%6==3) || (%6==6) || (%6==7))
-      resample boot replications 1000 from 0;
-    end
-
-    /*symmetric resampling*/
-    if((%6==4) || (%6==5) || (%6==6) || (%6==7))
-      resample sym replications 1000 from 0;
-    end
-
   end
 
-  /*Tree vault store*/
-  hold /+0; 
-  tvault >/;
+  /*calculate bremer support*/
+  if ('dobrs')
+  macfloat 1; /*set the br value float*/
+  bsupport !! 0;
+  end
 
 end
+  
+/*choose final tree*/
+tchoose/;
+
+/*adjust to zero following Pablo Goloboff*/
+sub 0;
+
+/*jakknifing*/
+if ('dojak')
+  resample jak replications 1000 from 0; /*from 0 will orphan other trees*/
+end
+
+/*bootstrap*/
+if ('doboot')
+  resample boot replications 1000 from 0;
+end
+
+/*symmetric resampling*/
+if ('dosym')
+  resample sym replications 1000 from 0;
+end
+
+/*Tree vault store*/
+hold /+0; 
+tvault >/;
 
 /*Export consensus tree with supports*/
 ttags & %7.resample.svg thickness 7 italics fontsize 15;
@@ -550,136 +461,39 @@ quote
 |          is the ctf file with taxname        |
 |      The file `resample.svg` contain         |;
 
-
-if (argnumber<=5)
+if ('dostr')
   quote
 |          strict consensus tree with          |;
 else
-if ( (argnumber >=6) && (( %6 == 0.1 )||( %6 == 0.2 )||( %6 == 0.3 )||( %6==1.1 )||( %6 ==1.2 )||( %6 ==1.3 )||( %6 == 2.1 )||( %6 == 2.2 )||( %6 == 2.3 )||( %6 == 3.1 )||( %6 == 3.2 )||( %6 == 3.3 )||( %6 == 4.1 )||( %6 == 4.2 )||( %6 == 4.3 )||( %6 == 5.1 )||( %6 == 5.2 )||( %6 == 5.3 )||( %6 == 6.1 )||( %6 == 6.2 )||( %6 == 6.3 )||( %6 == 7.1 )||( %6 == 7.2 )||( %6 == 7.3 )) )
+if ('domjr')
   quote
-|          strict consensus tree with          |;
-else
-  if (eqstring [ %5 mjr ])
-    quote
 |          majority-rule consensus tree with   |;
-  else
-  if (eqstring [ %5 hlf ])
-    quote
-|          half strict consensus tree with     |;
-  else
-  if(eqstring [ %5 str ])
-    quote
-|          strict consensus tree with          |;
-  else
-    errmsg %5 must be mjr hlf or str;
-    errmsg Bremer support or relative bremer support must use strict consensus;
-  end end end
-end end
-
-if (argnumber>=6)
-  if ( (%6>0) && (%6<1) )
-    if (%6==0.1 || %6==0.3)
-      quote
-|          relative bremer support             |;
-    else
-    if (%6==0.2 || %6==0.3)
-      quote    
-|          bremer support                      |;
-    end end
-  else
-  if ((%6>=1) && (%6<2))
-    if (%6==1.1 || %6==1.3)
-      quote
-|          relative bremer support             |;
-    else
-    if (%6==1.2 || %6==1.3)
-      quote
-|          bremer support                      |;
-    end end
-      quote
-|          jackknifing                         |;
-  else
-  if ((%6>=2) && (%6<3))
-    if (%6==2.1 || %6==2.3)
-      quote
-|          relative bremer support             |;
-    else
-    if (%6==2.2 || %6==2.3)
-      quote
-|          bremer support                      |;
-    end end
-      quote
-|          bootstrap                           |;
-  else
-  if ((%6>=3) && (%6<4))
-    if (%6==3.1 || %6==3.3)
-      quote
-|          relative bremer support             |;
-    else
-    if (%6==3.2 || %6==3.3)
-      quote
-|          bremer support                      |;
-    end end
-    quote
-|          jackknifing, bootstrap              |;
-  else
-  if ((%6>=4) && (%6<5))
-    if (%6==4.1 || %6==4.3)
-      quote
-|          relative bremer support             |;
-    else
-    if (%6==4.2 || %6==4.3)
-      quote
-|          bremer support                      |;
-    end end
-    quote
-|          symmetric resampling                |;
-  else
-  if ((%6>=5) && (%6<6))
-    if (%6==5.1 || %6==5.3)
-      quote
-|          relative bremer support             |;
-    else
-    if (%6==5.2 || %6==5.3)
-      quote
-|          bremer support                      |;
-    end end
-    quote
-|          jackknifing, symmetric resampling   |; 
-  else
-  if ((%6>=6) && (%6<7))
-    if (%6==6.1 || %6==6.3)
-      quote
-|          relative bremer support             |;
-    else
-    if (%6==6.2 || %6==6.3)
-      quote
-|          bremer support                      |;
-    end end
-    quote
-|          bootstrap, symmetric resampling     |;
-  else
-  if ((%6>=7) && (%6<8))
-    if (%6==7.1 || %6==7.3)
-      quote
-|          relative bremer support             |;
-    else
-    if (%6==7.2 || %6==7.3)
-      quote
-|          bremer support                      |;
-    end end
-    quote
-|          jackknifing, bootstrap, symmetric   |
-|          resampling                          |;
-  else
-    errmsg Mistake %6 value;
-  end end end end end end end end
 else
+if ('dohlf')
   quote
-|          relative bremer support, bremer     |
-|          support, jackknifing, bootstrap,    |
+|          half strict consensus tree with     |;
+end end end
+
+if ('dorbrs')
+  quote
+|          relative bremer support             |;
+else
+if ('dobrs')
+  quote    
+|          bremer support                      |;
+else
+if ('dojak')
+  quote
+|          jackknifing                         |;
+else
+if ('doboot')
+  quote
+|          bootstrap                           |;
+else
+if ('dosym')
+  quote
 |          symmetric resampling                |;
-end
+end end end end end
 
 quote
 |      The file `apo.svg` contains the         |
