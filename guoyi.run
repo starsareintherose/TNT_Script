@@ -31,7 +31,7 @@ if ( (argnumber == 0) || (argnumber >7) )
 |          - resamp should be sum of what you want   |
 |            jak=1, boot=2, sym=4 relative-bremer    |
 |            (rbr)=0.1, bremer(br)=0.2               |
-|            i.e rbr+br+jak+boot+sym=7.3 (default)   |
+|            i.e rbr+jak+boot+sym=7.1 (default)      |
 |          - prefix can be empty, or a string        |
 |            default is empty                        |
 \----------------------------------------------------/;
