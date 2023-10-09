@@ -264,7 +264,6 @@ if ('dosym')
 end
 
 quote
-|        will be shown on the resample.svg.      |
 |    Apomorphic characters mapping will be shown |
 |        on the apo.svg and saved to apo*.tre.   |
 |    TL, CI and RI will be calculated finally.   |
