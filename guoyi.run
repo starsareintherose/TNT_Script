@@ -504,7 +504,7 @@ if ('doew')
 else
 if ('doiw')
   quote
-|          under implied weighting,            |;
+|          under implied weighting,            |
 |          K value is 'kvalue'                 |;
 else
 if ('doeiw')
