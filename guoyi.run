@@ -524,7 +524,8 @@ quote
 |          of character homoplasy              |;
 
 if ('doeiw')
-|      The file `eiw.log` contain the report   |
+quote
+|      The file `eiw.log` contain the report   |;
 end
 
 quote
