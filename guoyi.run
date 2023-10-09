@@ -243,22 +243,22 @@ end end end
 if ('dorbrs')
   quote
 |    relative bremer support                     |;
-else
+end
 if ('dobrs')
   quote
 |    bremer support                              |;
-else
+end
 if ('dojak')
   quote
 |    jackknifing                                 |;
-else
+end
 if ('doboot')
   quote
 |    bootstrap                                   |;
-else
+end
 if ('dosym')
 |    symmetric resampling                        |;
-end end end end end
+end
 
 quote
 |        will be shown on the resample.svg.      |
@@ -450,7 +450,7 @@ quote
 |      The file `trees*.tre` contain           |
 |          trees found by mult and xmult       |
 |      The file `original*.tre` contain        |
-|          strict consensus tree without label |
+|          consensus tree without label        |
 |      The file `resample*.tre` contain        |
 |          consensus tree with support         |
 |      The file `apo*.tre` contain             |
@@ -479,23 +479,38 @@ end end end
 if ('dorbrs')
   quote
 |          relative bremer support             |;
-else
+end
 if ('dobrs')
   quote    
 |          bremer support                      |;
-else
+end
 if ('dojak')
   quote
 |          jackknifing                         |;
-else
+end
 if ('doboot')
   quote
 |          bootstrap                           |;
-else
+end
 if ('dosym')
   quote
 |          symmetric resampling                |;
-end end end end end
+end
+
+if ('doew')
+  quote
+|          under equal weighting               |;
+else
+if ('doiw')
+  quote
+|          under implied weighting,            |;
+|          K value is 'kvalue'                 |;
+else
+if ('doeiw')
+  quote
+|          under extended implied weighting,   |
+|          K value is 'kvalue'                 |;
+end end end
 
 quote
 |      The file `apo.svg` contains the         |
@@ -506,10 +521,16 @@ quote
 |          tree tags in text                   |
 |      The file `homo.log` contain the report  |
 |          of character homoplasy              |
+
+if ('doeiw')
 |      The file `eiw.log` contain the report   |
+end
+
 |          of character concavities            |
 |      The file `winclada.tre` can be          |
 |          converted by tnt2winclada           |
+|      The file `original.tnt.tre` can be read |
+|          by winclada after reading tnt file  |
 \----------------------------------------------/;
 
 /*Quit*/
