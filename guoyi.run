@@ -521,12 +521,13 @@ quote
 |      The file `resample/apo.log` contain the |
 |          tree tags in text                   |
 |      The file `homo.log` contain the report  |
-|          of character homoplasy              |
+|          of character homoplasy              |;
 
 if ('doeiw')
 |      The file `eiw.log` contain the report   |
 end
 
+quote
 |          of character concavities            |
 |      The file `winclada.tre` can be          |
 |          converted by tnt2winclada           |
