@@ -320,6 +320,7 @@ var: contree;
 set contree ntrees;
 
 /*Store consensus tree to tree vault*/
+hold /+0; 
 tv>/;
 tchoose 0.'npars';
 
@@ -374,10 +375,6 @@ end
 if ('dosym')
   resample sym replications 1000 from 0;
 end
-
-/*Tree vault store*/
-hold /+0; 
-tvault >/;
 
 /*Export consensus tree with supports*/
 ttags & %7.resample.svg thickness 7 italics fontsize 15;
