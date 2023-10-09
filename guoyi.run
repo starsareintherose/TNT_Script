@@ -240,25 +240,27 @@ if ('dohlf')
 |    Half strict consensus will be used.         |;
 end end end
 
+quote
+|    resample.svg will contain a tree with       |;
 if ('dorbrs')
   quote
-|    relative bremer support                     |;
+|        relative bremer support                 |;
 end
 if ('dobrs')
   quote
-|    bremer support                              |;
+|        bremer support                          |;
 end
 if ('dojak')
   quote
-|    jackknifing                                 |;
+|        jackknifing                             |;
 end
 if ('doboot')
   quote
-|    bootstrap                                   |;
+|        bootstrap                               |;
 end
 if ('dosym')
   quote
-|    symmetric resampling                        |;
+|        symmetric resampling                    |;
 end
 
 quote
