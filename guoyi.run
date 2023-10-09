@@ -163,21 +163,6 @@ else
   set dostr 1;
 end end
 
-/*handle search*/
-if (ntax<=25)
-  if ('doeiw')
-    set search 2;
-  else
-    set search 1;
-  end
-else
-  if (ntax<75)
-    set search 2;
-  else
-    set search 3;
-  end
-end
-
 /*Basic settings*/
 taxname+1000;
 taxname=;
@@ -197,6 +182,21 @@ end
 /*Reopen tnt*/
 procedure %1;
 hold 10000;
+
+/*handle search*/
+if (ntax<=24) /*taxa lower than 25 (including 25)*/
+  if ('doeiw')
+    set search 2;
+  else
+    set search 1;
+  end
+else
+  if (ntax<74) /*taxa lower than 75 do mult*/
+    set search 2;
+  else
+    set search 3;
+  end
+end
 
 /*Report what will be done*/
 quote 
