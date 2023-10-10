@@ -434,6 +434,35 @@ set CI 'themin'/'TL'; /*CI=1 means no homoplasy*/
 set RI ('themax'-'TL')/('themax'-'themin'); /*RI=1 character fits perfetcly*/
 report=;
 
+/*Generate ss file for winclada*/
+log %7.winclada.ss;
+/*get basic info*/
+var: taxnum chanum;
+set taxnum ntax+1;
+set chanum nchar+1;
+/*output head*/
+quote
+xread
+'
+Data saved from TNT
+'
+'chanum' 'taxnum';
+/*outhead body*/
+xread!;
+/*output split symnol*/
+runc!
+tntprintf(";\n\n");
+!
+/*output the tread*/
+taxname-;
+tp*;
+/*output the end*/
+runc!
+tntprintf("proc/;\n");
+!
+log/;
+
+
 /*Report CI/RI/TL */
 log %7.report.log;
 macfloat 3;
@@ -506,7 +535,7 @@ else
 if ('doiw')
   quote
 |          under implied weighting,            |
-|          K value is 'kvalue'                 |;
+|          K value is 'kvalue'                       |;
 else
 if ('doeiw')
   quote
@@ -526,15 +555,15 @@ quote
 
 if ('doeiw')
 quote
-|      The file `eiw.log` contain the report   |;
+|      The file `eiw.log` contain the report   |
+|          of character concavities            |;
 end
 
 quote
-|          of character concavities            |
 |      The file `winclada.tre` can be          |
 |          converted by tnt2winclada           |
-|      The file `original.tnt.tre` can be read |
-|          by winclada after reading tnt file  |
+|      The file `winclada.ss` can be read by   |
+|          winclada directly                   |
 \----------------------------------------------/;
 
 /*Quit*/
