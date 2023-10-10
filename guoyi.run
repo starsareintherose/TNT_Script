@@ -39,8 +39,8 @@ if ( (argnumber == 0) || (argnumber >7) )
 end
 
 /*Var for handling args*/
-var: 
-  dojak doboot dosym dobrs dorbrs rsmp dobremer 
+var:
+  dojak doboot dosym dobrs dorbrs rsmp dobremer
   dostr domjr dohlf contype
   doew doiw doeiw dowt wtstring wttype
   kvalue
@@ -51,6 +51,8 @@ set dostr 0; set domjr 0; set dohlf 0;
 set doew 0; set doiw 0; set doeiw 0; set dowt 0; set wttype 0;
 set kvalue 12;
 set search 0;
+
+goto=%0;
 
 /*handle weighting type*/
 if (argnumber>=3)
@@ -67,7 +69,7 @@ if (argnumber>=3)
     set doeiw 1;
     set wttype 3;
   else
-    errmsg Weighting type must be ew, iw or eiw;
+   goto wttypeerr;
   end end end
 else
   set doeiw 1;
@@ -82,7 +84,7 @@ end
 if (argnumber>=4)
   set kvalue %4;
   if ( 'doew' && ('kvalue' != 0))
-    errmsg Equal weighting (ew) must be followed with 0 instead of 'kvalue';
+    goto kvalueerr;
   end
 end
 
@@ -116,7 +118,7 @@ else
 end
 
 if ('rsmp' != 0)
-  errmsg Input %6 is illegal;
+  errmsg Input 'rsmp' is illegal;
 end
 
 if ('dobrs' || 'dorbrs')
@@ -131,12 +133,12 @@ if (argnumber>=6)
     if (eqstring [ $contype str ])
     else
     if (eqstring [ $contype mjr ])
-        errmsg Bremer support or any bremer support variations must use strict consensus;
+       goto bremererr;
     else
     if (eqstring [ $contype hlf ])
-      errmsg Bremer support or any bremer support variations must use strict consensus;
+      goto bremererr;
     else
-      errmsg Consensus type must be str mjr or hlf;
+      goto contypeerr;
     end end end
   else
     if (eqstring [ $contype str ])
@@ -148,19 +150,19 @@ if (argnumber>=6)
     if (eqstring [ $contype hlf ])
       set dohlf 1;
     else
-      errmsg Consensus type must be str mjr or hlf;
+      goto contypeerr;
     end end end
   end
 else
 if (argnumber==5)
   set contype $%5;
   if ((eqstring [ $contype mjr ]) || (eqstring [ $contype hlf ]))
-    errmsg Bremer support or any bremer support variations must use strict consensus;
+    goto bremererr;
   else
   if (eqstring [ $contype str ])
     set dostr 1;
   else
-    errmsg Consensus type must be str mjr or hlf;
+    goto contypeerr;
   end end
 else
   set dostr 1;
@@ -570,3 +572,23 @@ quote
 
 /*Quit*/
 zzz;
+
+/*consensus type error*/
+label contypeerr
+errmsg Consensus type must be str mjr or hlf;
+proc/;
+
+/*weighting type error*/
+label wttypeerr
+errmsg Weighting type must be ew, iw or eiw;
+proc/;
+
+/*equal weighting k value error*/
+label kvalueerr
+errmsg Equal weighting (ew) must be followed with 0 instead of 'kvalue';
+proc/;
+
+/*bremer support not strict consensus error*/
+label bremererr
+errmsg Bremer support or any bremer support variations must use strict consensus;
+proc/;
