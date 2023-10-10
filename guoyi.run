@@ -16,7 +16,8 @@ if ( (argnumber == 0) || (argnumber >7) )
 |        ==============================              |
 |        filename type weight K cons resamp prefix   |
 |          - filename extension must be lower case   |
-|            fas/fasta tnt/ss are allowed            |
+|            fasta (fas/fasta), tnt (tnt/ss), nexus  |
+|            (nex/nexus) format are allowed          |
 |          - type should be 32, dna, prot, num       |
 |            num=number, dna=DNA, prot=protein       |
 |            32=max number allowed (default)         |
@@ -47,14 +48,14 @@ var:
   doew doiw doeiw dowt wtstring wttype
   kvalue
   search
-  isfas istnt input;
+  isfas istnt isnex input;
 
 set dojak 0; set doboot 0; set dosym 0; set dobrs 0; set dorbrs 0; set rsmp 0; set dobremer 0;
 set dostr 0; set domjr 0; set dohlf 0;
 set doew 0; set doiw 0; set doeiw 0; set dowt 0; set wttype 0;
 set kvalue 12;
 set search 0;
-set isfas 0; set istnt 0;
+set isfas 0; set istnt 0; set isnex 0;
 
 goto=%0;
 
@@ -67,9 +68,11 @@ if ((eqstring [ $input>. fas ]) || (eqstring [ $input>. fasta ]))
 else
 if ((eqstring [ $input>. tnt ]) || (eqstring [ $input>. ss ]))
   set istnt 1;
+if ((eqstring [ $input>. nex ]) || (eqstring [ $input>. nexus ]))
+  set isnex 1;	
 else
-  errmsg extension name of input file must be fas/fasta (for fas format) or tnt/ss (for Hennig86/NONA/TNT format);
-end end
+  errmsg extension name of input file must be fas/fasta (for fas format), tnt/ss (for Hennig86/NONA/TNT format), nex/nexus (for nex format);
+end end end
 
 /*handle weighting type*/
 if (argnumber>=3)
@@ -202,7 +205,7 @@ if ('dowt')
 end
 
 /*Reopen tnt*/
-if ('istnt')
+if ('istnt' || 'isnex')
   procedure $input;
 else
 if ('isfas')
