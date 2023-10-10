@@ -41,8 +41,8 @@ end
 /*Var for handling args*/
 var: 
   dojak doboot dosym dobrs dorbrs rsmp dobremer 
-  dostr domjr dohlf
-  doew doiw doeiw dowt wttype
+  dostr domjr dohlf contype
+  doew doiw doeiw dowt wtstring wttype
   kvalue
   search;
 
@@ -54,15 +54,16 @@ set search 0;
 
 /*handle weighting type*/
 if (argnumber>=3)
-  if (eqstring [ %3 ew ])
+  set wtstring $%3;
+  if (eqstring [ $wtstring ew ])
     set doew 1;
     set wttype 1;
   else
-  if (eqstring [ %3 iw ])
+  if (eqstring [ $wtstring iw ])
     set doiw 1;
     set wttype 2;
   else
-  if (eqstring [ %3 eiw ])
+  if (eqstring [ $wtstring eiw ])
     set doeiw 1;
     set wttype 3;
   else
@@ -124,26 +125,27 @@ end
 
 /*handle consensus type*/
 if (argnumber>=6)
+  set contype $%5;
   if ('dobremer')
     set dostr 1;
-    if (eqstring [ %5 str ])
+    if (eqstring [ $contype str ])
     else
-    if (eqstring [ %5 mjr ])
+    if (eqstring [ $contype mjr ])
         errmsg Bremer support or any bremer support variations must use strict consensus;
     else
-    if (eqstring [ %5 hlf ])
+    if (eqstring [ $contype hlf ])
       errmsg Bremer support or any bremer support variations must use strict consensus;
     else
       errmsg Consensus type must be str mjr or hlf;
     end end end
   else
-    if (eqstring [ %5 str ])
+    if (eqstring [ $contype str ])
       set dostr 1;
     else
-    if (eqstring [ %5 mjr ])
+    if (eqstring [ $contype mjr ])
       set domjr 1;
     else
-    if (eqstring [ %5 hlf ])
+    if (eqstring [ $contype hlf ])
       set dohlf 1;
     else
       errmsg Consensus type must be str mjr or hlf;
@@ -151,10 +153,11 @@ if (argnumber>=6)
   end
 else
 if (argnumber==5)
-  if ((eqstring [ %5 mjr ]) || (eqstring [ %5 hlf ]))
+  set contype $%5;
+  if ((eqstring [ $contype mjr ]) || (eqstring [ $contype hlf ]))
     errmsg Bremer support or any bremer support variations must use strict consensus;
   else
-  if (eqstring [ %5 str ])
+  if (eqstring [ $contype str ])
     set dostr 1;
   else
     errmsg Consensus type must be str mjr or hlf;
@@ -432,8 +435,16 @@ set themax maxsteps;
 set TL length[0];
 set CI 'themin'/'TL'; /*CI=1 means no homoplasy*/
 set RI ('themax'-'TL')/('themax'-'themin'); /*RI=1 character fits perfetcly*/
-report=;
 
+/*Report CI/RI/TL */
+log %7.report.log;
+macfloat 3;
+quote Consistency Index (CI) is 'CI';
+quote Retention Index (RI) is 'RI';
+quote Tree Length (TL) is 'TL';
+log/;
+
+watch-;
 /*Generate ss file for winclada*/
 log %7.winclada.ss;
 /*get basic info*/
@@ -460,15 +471,6 @@ tp*;
 runc!
 tntprintf("proc/;\n");
 !
-log/;
-
-
-/*Report CI/RI/TL */
-log %7.report.log;
-macfloat 3;
-quote Consistency Index (CI) is 'CI';
-quote Retention Index (RI) is 'RI';
-quote Tree Length (TL) is 'TL';
 log/;
 log + %7.tnt.log;
 
