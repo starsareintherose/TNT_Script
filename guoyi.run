@@ -506,7 +506,7 @@ quote
 /----------------------------------------------\
 |      The analysis has been finished.         |
 |      The file `tnt.log` contains             |
-|          K, TL, CI and RI                    |
+|          the performing details              |
 |      The file `trees*.tre` contain           |
 |          trees found by mult and xmult       |
 |      The file `original*.tre` contain        |
@@ -520,7 +520,7 @@ quote
 |      The file `*.ctf` tree file is           |
 |          only readable for TNT               |
 |      The file `*.tnt.tre` contain            |
-|          is the ctf file with taxname        |
+|          is the tre file without taxname     |
 |      The file `resample.svg` contain         |;
 
 if ('dostr')
@@ -577,14 +577,14 @@ quote
 |          tree with apomorphy mapping         |
 |      The file `report.log` contains the      |
 |          CI RI TL publish-needed info        |
-|      The file `resample/apo.log` contain the |
-|          tree tags in text                   |
-|      The file `homo.log` contain the report  |
+|      The file `resample/apo.log` contains    |
+|          the tree tags text                  |
+|      The file `homo.log` contains the report |
 |          of character homoplasy              |;
 
 if ('doeiw')
 quote
-|      The file `eiw.log` contain the report   |
+|      The file `eiw.log` contains the report  |
 |          of character concavities            |;
 end
 

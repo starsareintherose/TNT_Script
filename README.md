@@ -14,11 +14,11 @@ The TNT script follows MIT license.
 
 - Extended implied weighting with K value setting (default, default K=12) or implied weighting with K value setting (default K=12) or equal weighting.      
 
-- Search trees via implicit enumeration (ntax<=25, but not for eiw) or TBR Mult (1000 times) with branch swapping (25<ntax<75, also for ntax<=25 with eiw) or Mult with branch swapping and Xmult (use random sectorial searches, produce 1,000 hits to best length and stop, 10 cycles of drifting, ratchet and fusing) (ntax>=75).      
+- Search trees via implicit enumeration (ntax<=25, but not for eiw) or TBR Mult (1000 times) with branch swapping (25<ntax<75, also for ntax<=25 with eiw) or Mult with branch swapping and Xmult (use random sectorial searches, produce 50 hits to best length and stop, 10 cycles of drifting, ratchet and fusing) (ntax>=75).      
 
-- Perform Strict consensus / Majority-rule consensus / Half strict consensus.            
+- Perform Strict consensus / Majority-rule consensus (without bremer support variations) / Half strict consensus (without bremer support variations).            
 
-- Calculate jackknifing (1,000 times), bootstrap (1,000 times) and Relative Bremer support.
+- Calculate relative Bremer support, jackknifing (1,000 times), bootstrap (1,000 times) and symmetric resampling (1,000 times).
 
 - Map apomorphic characters on the consensus tree.
 
@@ -38,7 +38,7 @@ For Linux and Mac users
 tnt run guoyi.run filename datatype weight K cons resample prefix,
 ```
 
-- datatpye should be `32`, `dna`, `prot`, `num`  
+- datatype should be `32`, `dna`, `prot`, `num` or any types tnt allowed 
 
   -  num=number, dna=DNA, prot=protein, 32=max number allowed (default)        
 
@@ -56,7 +56,7 @@ tnt run guoyi.run filename datatype weight K cons resample prefix,
 
 - resample should be sum of what you want
 
-  -  jak=1, boot=2, bremer=4 sym=8 i.e. jak+boot+sym+bremer=15 (default)       
+  -  relative bremer support (rbrs)=0.1, bremer support (brs)=0.2, jackknifing (jak)=1, bootstrap (boot)=2, symmetric resampling (sym)=4 i.e. rbrs+jak+boot+sym=7.1 (default)       
 
 - prefix can  be empty or a string
 
@@ -66,9 +66,31 @@ tnt run guoyi.run filename datatype weight K cons resample prefix,
 
 - Results instructions are at the end of `tnt.log`.
 
-- `trees.tre`, `resample.tre` are trees with taxname.
+- `*.tre` are trees with taxname, `*_no.tre` are trees without taxname.
 
-- `trees_no.tre`, `resample_no.tre` are trees without taxname.
+- `*.tnt.tre` can be read by TNT/WinClada directly.
+
+- `*.ctf` can only be read by TNT via `shortread`.
+
+- `*.svg` is the tree file, which can be edited by [inkscape](https://inkscape.org)
+
+- `original*` is the consensus tree.
+
+- `apo.tre` is the apomorphic character mapping tree.
+
+- `resample.tre` is the consensus tree with support.
+
+- `trees*.tre` contains he MPTs.
+
+- `resample/apo.log` contains the tree tags.
+
+- `eiw.log` contains character concavities.
+
+- `homo.log` contains homoplasy report of all characters.
+
+- `report.log` contains CI RI TL.
+
+- `winclada.ss` includes data matrix and consensus tree and it can be read by winclada directly.
 
 - `winclada.tre` can be transferred to the acceptable format for WinClada by tnt2winclada and the output file can be put into Winclada with your tnt matrix file `filename` for mapping apomorphic characters and homoplasy.
 
