@@ -68,6 +68,7 @@ if ((eqstring [ $input>. fas ]) || (eqstring [ $input>. fasta ]))
 else
 if ((eqstring [ $input>. tnt ]) || (eqstring [ $input>. ss ]))
   set istnt 1;
+else
 if ((eqstring [ $input>. nex ]) || (eqstring [ $input>. nexus ]))
   set isnex 1;	
 else
