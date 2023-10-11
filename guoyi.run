@@ -323,6 +323,7 @@ else
 if ('search'==3)
   sect: slack 40; 
   xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+  bbreak=tbr fill;
 end end end
 
 /*Export trees*/
