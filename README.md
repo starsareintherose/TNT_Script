@@ -1,10 +1,8 @@
 # guoyi.run
 
-TNT Script for Maximum Parsimony Analysis (Phylogeny)
-
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8428198.svg)](https://doi.org/10.5281/zenodo.8428198)
 
-The TNT script follows MIT license. 
+TNT Script for Maximum Parsimony Analysis (Phylogeny)
 
 ## Usage
 
@@ -100,7 +98,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
 
 ## Cite
 
-Cite this script is mandatory, list me (Guoyi Zhang) in your Acknowledgements is recommended.
+Cite this script is mandatory, list me (Guoyi Zhang) in your Acknowledgements is recommended. This script follows MIT License.
 
 # TNT2WinClada
 
