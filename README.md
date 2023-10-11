@@ -1,4 +1,8 @@
-# TNT Script used by Guoyi
+# guoyi.run
+
+TNT Script for Maximum Parsimony Analysis (Phylogeny)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8428198.svg)](https://doi.org/10.5281/zenodo.8428198)
 
 The TNT script follows MIT license. 
 
@@ -35,7 +39,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix;
 For Linux and Mac users
 
 ```
-tnt run guoyi.run filename datatype weight K cons resample prefix,
+tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
 ```
 
 - datatype should be `32`, `dna`, `prot`, `num` or any types tnt allowed 
