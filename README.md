@@ -80,9 +80,9 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
 
 - `apo.tre` is the apomorphic character mapping tree.
 
-- `resample.tre` is the consensus tree with support.
+- `resample.tre` is the consensus tree with support, which can be read by figtree after processing by tnt2figtree.
 
-- `trees*.tre` contains he MPTs.
+- `trees*.tre` contains he MPTs, which can be read by figtree after processing by tnt2figtree.
 
 - `resample/apo.log` contains the tree tags.
 
@@ -100,58 +100,6 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
 
 Cite this script is mandatory, list me (Guoyi Zhang) in your Acknowledgements is recommended. This script follows MIT License.
 
-# TNT2WinClada
+# Further information
 
-```
-~|~|\ |~|~  ~)  |    |o._ |~| _  _| _ 
- | | \| |   /_   \/\/ || ||_|(_|(_|(_|
-
-MIT, Guoyi Zhang, 2023
-```
-
-## Function
-
-Convert TNT output tree file without tags and taxname, e.g. `winclada.tre` produced by TNT script, to WinClada acceptable format tree.
-
-## Compile
-
-### Linux & Unix
-
-```
-mkdir -p build && cd build
-cmake ..
-make && make install
-```
-
-### Windows
-
-```
-cl /EHsc tnt2winclada.cpp
-```
-
-## Usage
-
-```
-tnt2winclada -i ${input_file} -o ${output_file}
-```
-
-Interactive commands are also available.
-
-```
-tnt2winclada
-
-~|~|\ |~|~  ~)  |    |o._ |~| _  _| _ 
- | | \| |   /_   \/\/ || ||_|(_|(_|(_|
-TNT2WinClada
-MIT, Guoyi Zhang, 2023
-please type help to see more commands
-
-tnt2winclada> help
-help			show interactive commands help
-input <filename>	input a TNT output tree from the specified file
-output <filename>	output a winclada accessible tree file
-quit			quit the program
-exit			exit the program
-
-tnt2winclada>
-```
+To make tnt exported trees can be readable by WinClada (Nixon, 2021) and FigTree, please check tnt2winclada and tnt2figtree in this repository.
