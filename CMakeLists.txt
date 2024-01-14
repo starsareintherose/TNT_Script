@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(tnt2winclada)
+project(tnt_script)
 SET( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(tnt2winclada tnt2winclada.cpp)
+add_subdirectory(src_tnt2winclada)
+add_subdirectory(src_tnt2figtree)
 
-target_compile_options(tnt2winclada PRIVATE -Wall -Wextra -pedantic)
-
-install(TARGETS tnt2winclada DESTINATION /usr/bin)
 install(FILES guoyi.run DESTINATION /usr/share/tnt/tnt_scripts)
-install(FILES LICENSE DESTINATION /usr/share/licenses/tnt2winclada)
-install(FILES README.md DESTINATION /usr/share/doc/tnt2winclada)
+install(FILES LICENSE DESTINATION /usr/share/licenses/tnt-guoyi-script)
+install(FILES README.md DESTINATION /usr/share/doc/tnt-guoyi-script)
