@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
+#include <sstream>
 
 std::string remove_useless(std::string input_str1)
 {
