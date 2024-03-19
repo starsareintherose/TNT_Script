@@ -103,3 +103,5 @@ Cite this script is mandatory, list me (Guoyi Zhang) in your Acknowledgements is
 # Further information
 
 To make tnt exported trees can be readable by WinClada (Nixon, 2021) and FigTree, please check tnt2winclada and tnt2figtree in this repository.
+
+runwincladtree.run can handle [wincladtree script](https://www.lillo.org.ar/phylogeny/tnt/scripts/wincladtree.run) with input file which must be $(PREFIX).winclada.ss or winclada.tree.
