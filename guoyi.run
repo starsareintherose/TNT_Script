@@ -463,13 +463,21 @@ set themin minsteps;
 set themax maxsteps;
 set TL length[0];
 set CI 'themin'/'TL'; /*CI=1 means no homoplasy*/
-set RI ('themax'-'TL')/('themax'-'themin'); /*RI=1 character fits perfetcly*/
+if ('themax' != 'themin')
+	set RI ('themax'-'TL')/('themax'-'themin'); /*RI=1 character fits perfetcly*/
+else
+	set RI 999;
+end
 
 /*Report CI/RI/TL */
 log %7.report.log;
 macfloat 3;
 quote Consistency Index (CI) is 'CI';
-quote Retention Index (RI) is 'RI';
+if ('RI' == 999)
+	quote Retention Index (RI) is NA;
+else
+	quote Retention Index (RI) is 'RI';
+end
 quote Tree Length (TL) is 'TL';
 log/;
 
