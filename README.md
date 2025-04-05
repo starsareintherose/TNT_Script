@@ -1,7 +1,5 @@
 # guoyi.run
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8431529.svg)](https://doi.org/10.5281/zenodo.8431529)
-
 TNT Script for Maximum Parsimony Analysis (Phylogeny)
 
 ## Usage
