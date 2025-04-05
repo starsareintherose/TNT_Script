@@ -52,7 +52,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
 
 - cons should be `str`, `mjr`, `hlf`  
 
-  -  mjr=majority rule, hlf=ea, str=strict (default)                   
+  -  mjr=majority rule, hlf=half, str=strict (default)                   
 
 - resample should be sum of what you want
 
