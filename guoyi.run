@@ -357,7 +357,7 @@ set contree ntrees;
 /*hold /+0; 
 tv>/;
 tchoose 0.'npars';*/
-tcoose/;
+tchoose/;
 
 /*Get rbr/br/jak/boot/sym support and get consensus tree*/
 ttags=;
