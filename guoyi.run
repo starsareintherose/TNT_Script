@@ -354,9 +354,10 @@ var: contree;
 set contree ntrees;
 
 /*Store consensus tree to tree vault*/
-hold /+0; 
+/*hold /+0; 
 tv>/;
-tchoose 0.'npars';
+tchoose 0.'npars';*/
+tcoose/;
 
 /*Get rbr/br/jak/boot/sym support and get consensus tree*/
 ttags=;
@@ -389,8 +390,8 @@ if ('dobremer')
 end
   
 /*Choose final tree*/
-tv<;
-tchoose/;
+/*tv<;*/
+tchoose 0;
 
 /*adjust to zero following Pablo Goloboff*/
 sub 0;
@@ -426,6 +427,10 @@ taxname=;
 
 /*Export consensus tree*/
 tchoose /;
+ttags=;
+tp/;
+ttags & %7.original.svg thickness 7 italics fontsize 15;
+ttags-;
 export - %7.original.tre;
 taxname-;
 export - %7.original_no.tre;
