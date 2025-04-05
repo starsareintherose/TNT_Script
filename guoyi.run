@@ -111,7 +111,7 @@ end
 
 /*handle resmaple type*/
 if (argnumber<6)
-  set dojak 1; set doboot 1; set dosym 1; set dorbrs 1;
+  set dojak 1; set doboot 1; set dosym 1; set dorbrs 0;
 else
   set rsmp %6;
   loop 1 5
@@ -356,7 +356,6 @@ set contree ntrees;
 /*Store consensus tree to tree vault*/
 hold /+0; 
 tv>/;
-tchoose 0.'npars';
 
 /*Get rbr/br/jak/boot/sym support and get consensus tree*/
 ttags=;
@@ -377,18 +376,19 @@ if ('dobremer')
 
   /*calculate relative bremer support*/
   if ('dorbrs')
-  bs *]!! 0.'npars';
+  bs ]!! 0.'npars';
   end
 
   /*calculate bremer support*/
   if ('dobrs')
   macfloat 1; /*set the br value float*/
-  bsupport *!! 0.'npars';
+  bsupport !! 0.'npars';
   end
 
 end
-  
+
 /*Choose final tree*/
+tchoose 0.'npars';
 tv<;
 tchoose /;
 
@@ -549,7 +549,11 @@ if ('dohlf')
   quote
 |          half strict consensus tree with     |;
 end end end
-
+if ('dobremer')
+  quote
+|          WARNING: bremer-related will        |
+|          WARNING: change the polytomy        |;
+end
 if ('dorbrs')
   quote
 |          relative bremer support             |;

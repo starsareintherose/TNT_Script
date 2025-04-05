@@ -52,11 +52,13 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
 
 - cons should be `str`, `mjr`, `hlf`  
 
-  -  mjr=majority rule, hlf=half, str=strict (default)                   
+  -  mjr=majority rule, hlf=ea, str=strict (default)                   
 
 - resample should be sum of what you want
 
-  -  relative bremer support (rbrs)=0.1, bremer support (brs)=0.2, jackknifing (jak)=1, bootstrap (boot)=2, symmetric resampling (sym)=4 i.e. rbrs+jak+boot+sym=7.1 (default)       
+  -  relative bremer support (rbrs)=0.1, bremer support (brs)=0.2, jackknifing (jak)=1, bootstrap (boot)=2, symmetric resampling (sym)=4 i.e. jak+boot+sym=7 (default) 
+
+  -  Notice: Bremer related support would change the tree topology, so it should be used with caution.
 
 - prefix can  be empty or a string
 
