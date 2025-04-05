@@ -354,10 +354,9 @@ var: contree;
 set contree ntrees;
 
 /*Store consensus tree to tree vault*/
-/*hold /+0; 
+hold /+0; 
 tv>/;
-tchoose 0.'npars';*/
-tchoose/;
+tchoose 0.'npars';
 
 /*Get rbr/br/jak/boot/sym support and get consensus tree*/
 ttags=;
@@ -378,20 +377,20 @@ if ('dobremer')
 
   /*calculate relative bremer support*/
   if ('dorbrs')
-  bs ]!! 0;
+  bs *]!! 0.'npars';
   end
 
   /*calculate bremer support*/
   if ('dobrs')
   macfloat 1; /*set the br value float*/
-  bsupport !! 0;
+  bsupport *!! 0.'npars';
   end
 
 end
   
 /*Choose final tree*/
-/*tv<;*/
-tchoose 0;
+tv<;
+tchoose /;
 
 /*adjust to zero following Pablo Goloboff*/
 sub 0;
