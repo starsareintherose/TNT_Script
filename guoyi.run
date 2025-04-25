@@ -7,7 +7,7 @@ if ( (argnumber == 0) || (argnumber >7) )
   silent -console;
   quote 
 /----------------------------------------------------\
-|        GUOYI TNT SCRIPT 2022-2023 MIT              |
+|        GUOYI TNT SCRIPT 2022-2025 MIT              |
 |        You need to give your filename              |
 | shell> tnt run guoyi.tnt filename, (Linux & Mac)   |
 | shell> tnt run guoyi.run filename(semicolon) (Win) |
@@ -26,8 +26,8 @@ if ( (argnumber == 0) || (argnumber >7) )
 |            eiw=extended implied weight (default)   |
 |            N.B. K of ew must followed 0 (=NA)      |
 |          - K is 12 (default) following Goloboff    |
-|            et al. 2017 (Cladistics 34: 407–437)    |
-|            it must more than 0                     |
+|            et al. 2017 (Cladistics 34: 407-437)    |
+|            it must be more than 0                  |
 |          - cons should be str, mjr, hlf            |
 |            mjr=majority rule, hlf=half             |
 |            str=strict (default)                    |
@@ -44,8 +44,8 @@ end
 /*Var for handling args*/
 var:
   dojak doboot dosym dobrs dorbrs rsmp dobremer
-  dostr domjr dohlf contype
-  doew doiw doeiw dowt wtstring wttype
+  dostr domjr dohlf contype[5]
+  doew doiw doeiw dowt wtstring[5] wttype /*[5] limits the character number, avoid overwriting values in the next declared variable.*/
   kvalue
   search
   isfas istnt isnex input;
@@ -63,17 +63,17 @@ goto=%0;
 set input $%1;
 
 /*confirm input format*/
-if ((eqstring [ $input>. fas ]) || (eqstring [ $input>. fasta ]))
+if ((isinstring [ $input .fas ] == lenstring[ $input ] ) || (isinstring [ $input .fasta ] == lenstring[ $input ] ))
   set isfas 1;
 else
-if ((eqstring [ $input>. tnt ]) || (eqstring [ $input>. ss ]))
+if ((isinstring [ $input .tnt ] == lenstring[ $input ] ) || (isinstring [ $input .ss ] == lenstring[ $input ] ))
   set istnt 1;
 else
-if ((eqstring [ $input>. nex ]) || (eqstring [ $input>. nexus ]))
+if ((isinstring [ $input .nex ] == lenstring[ $input ] ) || (isinstring [ $input .nexus ] == lenstring[ $input ] ))
   set isnex 1;	
 else
   errmsg extension name of input file must be fas/fasta (for fas format), tnt/ss (for Hennig86/NONA/TNT format), nex/nexus (for nex format);
-end end end
+xend /*multiple end, but can't be used inside loops*/
 
 /*handle weighting type*/
 if (argnumber>=3)
@@ -109,7 +109,7 @@ if (argnumber>=4)
   end
 end
 
-/*handle resmaple type*/
+/*handle resample type*/
 if (argnumber<6)
   set dojak 1; set doboot 1; set dosym 1; set dorbrs 0;
 else
@@ -192,7 +192,7 @@ end end
 /*Basic settings*/
 taxname+1000;
 taxname=;
-mxram 10240;
+mxram[; mxram*2; /*allocate twice as much RAM as TNT thinks*/
 if(argnumber>=2)
   nstates %2;
 else
@@ -215,7 +215,7 @@ end end
 hold 10000;
 
 /*handle search*/
-if (ntax<=24) /*taxa lower than 25 (including 25)*/
+if (ntax<=19) /*taxa lower than 20 (including 20)*/
   if ('doeiw')
     set search 2;
   else
@@ -243,7 +243,7 @@ else
 if ('wttype'==3)
   quote
 |    Ex-implied weighting will be used, K is 'kvalue'. |;
-end end end
+xend
 
 if ('search'==1)
   quote
@@ -256,7 +256,7 @@ else
 if ('search'==3)
   quote
 |    Xmult will be performed.                    |;
-end end end
+xend
 
 if ('dostr')
   quote
@@ -269,7 +269,7 @@ else
 if ('dohlf')
   quote
 |    Half strict consensus will be used.         |;
-end end end
+xend
 
 quote
 |    resample.svg will contain a tree with       |;
@@ -324,7 +324,7 @@ if ('search'==3)
   sect: slack 40; 
   xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
   bbreak=tbr fill;
-end end end
+xend
 
 /*Export trees*/
 export= %7.trees.tre;
@@ -347,7 +347,7 @@ if ('domjr')
 else
 if ('dohlf')
   comcomp * 0.'npars';
-end end end
+xend
 
 /*Get the consensus tree number*/
 var: contree;
@@ -371,7 +371,7 @@ ttags]; /*in one line*/
 
 if ('dobremer')
 
-  /*set value of suboptimal from most parsimony tree */
+  /*set value of suboptimal from most parsimonious tree */
   sub: 0;
 
   /*calculate relative bremer support*/
@@ -388,11 +388,10 @@ if ('dobremer')
 end
 
 /*Choose final tree*/
-tchoose 0.'npars';
 tv<;
 tchoose /;
 
-/*adjust to zero following Pablo Goloboff*/
+/*Reset suboptimal to zero (resampling will do searches!)*/
 sub 0;
 
 /*jakknifing*/
@@ -460,7 +459,7 @@ cscores;
 log/;
 log + %7.tnt.log;
 
-/*Caulculate TL/CI/RI score*/
+/*Calculate TL/CI/RI score*/
 report-;
 var: themin themax CI RI TL ;
 set themin minsteps;
@@ -468,7 +467,7 @@ set themax maxsteps;
 set TL length[0];
 set CI 'themin'/'TL'; /*CI=1 means no homoplasy*/
 if ('themax' != 'themin')
-	set RI ('themax'-'TL')/('themax'-'themin'); /*RI=1 character fits perfetcly*/
+	set RI ('themax'-'TL')/('themax'-'themin'); /*RI=1 character fits perfectly*/
 else
 	set RI 999;
 end
@@ -501,17 +500,14 @@ Data saved from TNT
 'chanum' 'taxnum';
 /*outhead body*/
 xread!;
-/*output split symnol*/
-runc!
-tntprintf(";\n\n");
-!
+/* finishing semicolon */
+quote .,; /* `.,` means `;` */
 /*output the tread*/
 taxname-;
 tp*;
-/*output the end*/
-runc!
-tntprintf("proc/;\n");
-!
+/* finishing semicolon */
+quote .,;
+quote proc/.,;
 log/;
 log + %7.tnt.log;
 
@@ -582,12 +578,12 @@ else
 if ('doiw')
   quote
 |          under implied weighting,            |
-|          K value is 'kvalue'                       |;
+|          K value is 'kvalue'                 |;
 else
 if ('doeiw')
   quote
 |          under extended implied weighting,   |
-|          K value is 'kvalue'                       |;
+|          K value is 'kvalue'                 |;
 end end end
 
 quote

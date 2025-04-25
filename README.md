@@ -14,7 +14,7 @@ TNT Script for Maximum Parsimony Analysis (Phylogeny)
 
 - Extended implied weighting with K value setting (default, default K=12) or implied weighting with K value setting (default K=12) or equal weighting.      
 
-- Search trees via implicit enumeration (ntax<=25, but not for eiw) or TBR Mult (1000 times) with branch swapping (25<ntax<75, also for ntax<=25 with eiw) or Mult with branch swapping and Xmult (use random sectorial searches, produce 50 hits to best length and stop, 10 cycles of drifting, ratchet and fusing) (ntax>=75).      
+- Search trees via implicit enumeration (ntax<=20, but not for eiw) or TBR Mult (1000 times) with branch swapping (20<ntax<75, also for ntax<=20 with eiw) or Mult with branch swapping and Xmult (use random sectorial searches, produce 50 hits to best length and stop, 10 cycles of drifting, ratchet and fusing) (ntax>=75). 
 
 - Perform Strict consensus / Majority-rule consensus (without bremer support variations) / Half strict consensus (without bremer support variations).            
 
@@ -98,7 +98,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
 
 ## Cite
 
-Cite this script is mandatory, list me (Guoyi Zhang) in your Acknowledgements is recommended. This script follows MIT License.
+If you use this script, you **must** cite this script and cite [TNT](https://www.lillo.org.ar/phylogeny/tnt/). I kindly request that you acknowledge Guoyi Zhang in your Acknowledgements. This script follows MIT License.
 
 # Further information
 
