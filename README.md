@@ -2,6 +2,8 @@
 
 TNT Script for Maximum Parsimony Analysis (Phylogeny)
 
+![](./cover.svg)
+
 ## Usage
 
 - Place this script and your matrix tnt file `filename` under the folder that you call `tnt` or `exe` file is placed
