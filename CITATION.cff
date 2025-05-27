@@ -1,14 +1,16 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite the following paper."
 authors:
-  - family-names: Zhang
-    given-names: Guoyi
-    orcid: https://doi.org/10.11646/zootaxa.5642.1.10
+  - family-names: "Zhang"
+    given-names: "Guoyi"
+    orcid: "https://orcid.org/0000-0002-3426-9273"
 title: "guoyi.run: One-step TNT script for maximum parsimony phylogenetic analysis"
 doi: 10.11646/zootaxa.5642.1.10
 type: article
-journal:
-  name: Zootaxa
-  volume: "5642"
-  issue: "1"
-  pages: "96–98"
+journal: "Zootaxa"
+month: 5
+volume: 5642
+issue: 1
+start: 96
+end: 98
+year: 2025
