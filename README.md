@@ -1,8 +1,10 @@
 # guoyi.run
 
-TNT Script for Maximum Parsimony Analysis (Phylogeny)
+One-step TNT script for maximum parsimony phylogenetic analysis
 
 ![](./cover.svg)
+
+[English README](./README.md) | [中文说明](./README.zh.md)
 
 ## Usage
 
@@ -11,6 +13,14 @@ TNT Script for Maximum Parsimony Analysis (Phylogeny)
 - Enter `tnt`
 
 - Enter command `guoyi filename;`
+
+## Cite
+
+If you use this script, you **must** cite this script and cite [TNT](https://www.lillo.org.ar/phylogeny/tnt/). I kindly request that you acknowledge Guoyi Zhang in your Acknowledgements. This script follows MIT License.
+
+ - Zhang G. guoyi.run: One-step TNT script for maximum parsimony phylogenetic analysis. *Zootaxa* 5642(1): 96–98. https://doi.org/10.11646/zootaxa.5642.1.10
+
+[Get Bibtex here](./citation.bib)
 
 ## Functions
 
@@ -97,10 +107,6 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
 - `winclada.ss` includes data matrix and consensus tree and it can be read by winclada directly.
 
 - `winclada.tre` can be transferred to the acceptable format for WinClada by tnt2winclada and the output file can be put into Winclada with your tnt matrix file `filename` for mapping apomorphic characters and homoplasy.
-
-## Cite
-
-If you use this script, you **must** cite this script and cite [TNT](https://www.lillo.org.ar/phylogeny/tnt/). I kindly request that you acknowledge Guoyi Zhang in your Acknowledgements. This script follows MIT License.
 
 # Further information
 
