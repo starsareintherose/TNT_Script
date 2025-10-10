@@ -3,7 +3,7 @@ macro=;
 log %7.tnt.log;
 
 /*primary notification*/
-if ( (argnumber == 0) || (argnumber >7) )
+if ( (argnumber == 0) || (argnumber >8) )
   silent -console;
   quote 
 /----------------------------------------------------\
@@ -14,7 +14,7 @@ if ( (argnumber == 0) || (argnumber >7) )
 |        ==============================              |
 |        === Parameters     Details ===              |
 |        ==============================              |
-|        filename type weight K cons resamp prefix   |
+|        file type weight K cons resamp prefix par   |
 |          - filename extension must be lower case   |
 |            fasta (fas/fasta), tnt (tnt/ss), nexus  |
 |            (nex/nexus) format are allowed          |
@@ -37,6 +37,9 @@ if ( (argnumber == 0) || (argnumber >7) )
 |            i.e rbr+jak+boot+sym=7.1 (default)      |
 |          - prefix can be empty, or a string        |
 |            default is empty                        |
+|          - par can be empty, or par                |
+|            please run pvm before using it          |
+|            default is empty                        |
 \----------------------------------------------------/;
   proc/; 
 end
@@ -48,7 +51,10 @@ var:
   doew doiw doeiw dowt wtstring[5] wttype /*[5] limits the character number, avoid overwriting values in the next declared variable.*/
   kvalue
   search
-  isfas istnt isnex input;
+  parstring[5]
+  isfas istnt isnex
+  isparallel 
+  input;
 
 set dojak 0; set doboot 0; set dosym 0; set dobrs 0; set dorbrs 0; set rsmp 0; set dobremer 0;
 set dostr 0; set domjr 0; set dohlf 0;
@@ -189,6 +195,16 @@ else
   set dostr 1;
 end end
 
+/*handle parallel*/
+if (argnumber==8)
+  set parstring $%8;
+  if (eqstring [ $parstring par ])
+    set isparallel 1;
+  end
+else
+  set isparallel 0;
+xend
+
 /*Basic settings*/
 taxname+1000;
 taxname=;
@@ -317,13 +333,41 @@ if ('search'==1)
   ienum;
 else
 if ('search'==2)
-  mult=replic 1000 tbr hold 10;
-  bbreak=tbr fill;        
+  if ('isparallel'==1)
+    ptnt begin search2 100 + .  =
+      hold 100; keep 0;
+      mult=replic 10 tbr hold 10;
+      bbreak = tbr fill;
+    return trees;
+    ptnt wait search2;
+    ptnt get search2;
+    unique *;
+    best;
+    bbreak = tbr fill;
+  else
+  if ('isparallel'==0)
+    mult=replic 1000 tbr hold 10;
+    bbreak=tbr fill;
+  end end
 else
 if ('search'==3)
-  sect: slack 40; 
-  xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
-  bbreak=tbr fill;
+  if ('isparallel'==1)
+    ptnt begin search3 25 + .  =
+      hold 40; keep 0;
+      xmult=hit 2 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+      bbreak = tbr fill;
+    return trees;
+    ptnt wait search3;
+    ptnt get search3;
+    unique *;
+    best;
+    bbreak = tbr fill;
+  else
+  if ('isparallel'==0)
+    sect: slack 40; 
+    xmult=hit 50 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
+    bbreak=tbr fill;
+  end end
 xend
 
 /*Export trees*/
@@ -436,6 +480,7 @@ tsave = %7.original.ctf;
 tsave *= %7.original.tnt.tre;
 
 /*Apomorphic characters*/
+if ('isparallel'==0)
 export = %7.winclada.tre;
 taxname =;
 ttags=;
@@ -451,6 +496,7 @@ export < %7.apo.tre;
 taxname-;
 export - %7.apo_no.tre;
 ttags-;
+end
 
 /*Character Analysis*/
 log %7.homo.log;
