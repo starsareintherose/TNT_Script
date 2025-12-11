@@ -47,7 +47,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix;
 For Linux and Mac users
 
 ```
-tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
+tnt run guoyi.run filename datatype weight 0/K cons resample prefix par,
 ```
 
 - datatype should be `32`, `dna`, `prot`, `num` or any types tnt allowed 
@@ -75,6 +75,14 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
 - prefix can  be empty or a string
 
   - default is empty
+
+- par is for Linux and Mac users only, it means run in parallel mode
+
+  - default is empty, which means run in single thread mode
+  
+  - it can be `par` or ``, `par` means run in parallel mode, `` means run in single thread mode
+
+  - You must configure the pvm first.
 
 ## Results
 

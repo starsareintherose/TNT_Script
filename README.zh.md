@@ -51,7 +51,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix;
 Linux 和 Mac 用户使用：
 
 ```
-tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
+tnt run guoyi.run filename datatype weight 0/K cons resample prefix par,
 ```
 
 说明如下：
@@ -84,6 +84,11 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix,
   * 注意：涉及 Bremer 的支持可能会改变树拓扑，请谨慎使用
 
 * `prefix` 可以为空或任意字符串（默认为空）
+
+* `par`：可选，表示并行计算，适用于 Linux 和 Mac 用户
+
+  * 需确保你的 pvm 系统配置正确
+  * 若不使用并行计算，请省略此参数
 
 ## 输出结果说明
 

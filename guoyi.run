@@ -335,6 +335,7 @@ else
 if ('search'==2)
   if ('isparallel'==1)
     ptnt begin search2 100 + .  =
+      rseed*;
       hold 100; keep 0;
       mult=replic 10 tbr hold 10;
       bbreak = tbr fill;
@@ -353,6 +354,7 @@ else
 if ('search'==3)
   if ('isparallel'==1)
     ptnt begin search3 25 + .  =
+      rseed*;
       hold 40; keep 0;
       xmult=hit 2 replications 20 drift 10 ratchet 10 fuse 10 hold 1 keepall;
       bbreak = tbr fill;
@@ -480,7 +482,9 @@ tsave = %7.original.ctf;
 tsave *= %7.original.tnt.tre;
 
 /*Apomorphic characters*/
-if ('isparallel'==0)
+if ('isparallel'==1 || (eqstring [ %2 dna ]) || (eqstring [ %2 prot ]) )
+quote this step (apomorphic characters mapping) is skipped because of parallel mode or DNA/protein data;
+else
 export = %7.winclada.tre;
 taxname =;
 ttags=;
@@ -496,7 +500,7 @@ export < %7.apo.tre;
 taxname-;
 export - %7.apo_no.tre;
 ttags-;
-end
+xend
 
 /*Character Analysis*/
 log %7.homo.log;
