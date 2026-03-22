@@ -84,6 +84,18 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix par,
 
   - You must configure the pvm first.
 
+## Working with continuous characters
+The script can be used for morphological matrices that contain continuous characters. However, they need to be standardized (see [Catalano & Goloboff 2018](https://doi.org/10.13140/RG.2.2.23797.27360) for more information on how to work with continuous characters in TNT), otherwise they will be disproportionate in comparison with other characters.\
+To standardize the matrix after it is read by TNT, edit your guoyi.run file and add a new line after the following block of code:
+```
+/*Reopen tnt*/
+if ('istnt' || 'isnex')
+  procedure $input;
+```
+The new line is:
+`nstates stand [highest value among continuous characters] [list of continuous characters to be standardized, separated by space];`\
+For example, if there are three continuous characters, and the highest value is 2.8, you would put it as: `nstates stand 2.8 0 1 2;`
+
 ## Results
 
 - Results instructions are at the end of `tnt.log`.
