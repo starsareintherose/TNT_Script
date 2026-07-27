@@ -422,13 +422,13 @@ if ('dobremer')
 
   /*calculate relative bremer support*/
   if ('dorbrs')
-  bs ]!! 0.'npars';
+  bs ]! 0.'npars';
   end
 
   /*calculate bremer support*/
   if ('dobrs')
   macfloat 1; /*set the br value float*/
-  bsupport !! 0.'npars';
+  bsupport ! 0.'npars';
   end
 
 end
