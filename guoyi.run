@@ -224,7 +224,10 @@ nstates NOGAPS;
 
 /*Set K*/ 
 if ('dowt')
+  piwe=;
+  if ('kvalue' > 0)
   piwe='kvalue';
+  end
 end
 
 /*Reopen tnt*/
@@ -234,6 +237,75 @@ else
 if ('isfas')
   procedure & $input;
 end end
+log/;
+
+log %7.setk.log;
+
+if ( ('dowt') && ('kvalue'==0) )
+
+var:
+ actK minK maxK
+ gVal aVal bVal
+ nVal maxIt;
+set gVal 1;
+
+/* find the value of g */
+loop 0 nchar
+  if (!isinfo[#1]) continue; end
+  if (!isact[#1]) continue; end
+  set aVal=maxsteps[#1];
+  set bVal=minsteps[#1];
+  if (('aVal'-'bVal')>'gVal')
+    set gVal 'aVal'-'bVal';
+  end
+stop
+
+quote value of g = 'gVal';
+
+set actK 10;
+set minK 0;
+set maxK 500; /* Assume 500 as the maximum possible value of K */
+
+set maxIt 0;
+
+/* find the best value of K */
+loop 0 1
+  quote current value of k = 'actK';
+  set aVal 1-('actK'/('actK'+1));
+  quote 'aVal';
+  set bVal ('actK'/('actK'+'gVal'-1))-('actK'/('actK'+'gVal'));
+  quote 'bVal';
+  set nVal 'aVal'/'bVal';
+  quote value of N = 'nVal';
+  if (('nVal'>14.8)&&('nVal'<15.2)) endloop; end /* N is in range */
+  if ('nVal'>15.2)
+    set minK 'actK';
+  else
+    set maxK 'actK';
+  end
+  set aVal ('maxK'-'minK')/2;
+  set actK 'minK' + 'aVal';
+  set maxIt ++;
+  if ('maxIt'==100) endloop; end /* emergency exit */
+  setloop 0;
+stop
+
+/* If it exited through the emergency stop */
+if ('maxIt'==100)
+  quote ITERATIONS DID NOT FINISH;
+  quote best K found: 'actK';
+  proc /;
+end
+
+quote Value of K: 'actK' (N='nVal');
+
+set kvalue 'actK';
+
+piwe='actK';
+end
+log/;
+
+log + %7.tnt.log;
 hold 10000;
 
 /*handle search*/

@@ -6,6 +6,8 @@ One-step TNT script for maximum parsimony phylogenetic analysis
 
 [English README](./README.md) | [中文说明](./README.zh.md)
 
+[Video tutorial](https://www.youtube.com/watch?v=mU0KcbEPgcE)
+
 ## Usage
 
 - Place this script and your matrix tnt file `filename` under the folder that you call `tnt` or `exe` file is placed
@@ -60,7 +62,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix par,
 
 - K is `12` (default) following Goloboff et al. 2017 (Cladistics 34: 407–437)
 
-  - it must more than 0 
+  - it must more than or equal to 0. If K=0, it means script automatically select K based on the dataset (setk.run algorithm). 
 
 - cons should be `str`, `mjr`, `hlf`  
 
@@ -110,7 +112,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix par,
 
 - `homo.log` contains homoplasy report of all characters.
 
-- `report.log` contains CI RI TL.
+- `report.log` contains CI RI TL of consensus tree and MPTs.
 
 - `winclada.ss` includes data matrix and consensus tree and it can be read by winclada directly.
 

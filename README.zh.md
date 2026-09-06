@@ -6,6 +6,8 @@
 
 [English README](./README.md) | [中文说明](./README.zh.md)
 
+[视频教程](https://www.bilibili.com/video/BV1fm7rzVELx/)
+
 ## 使用方法
 
 * 将本脚本和你的 TNT 矩阵文件 `filename` 放在你存放 `tnt` 或 `exe` 可执行文件的文件夹中。
@@ -67,7 +69,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix par,
 
 * `K` 值默认为 `12`，参考 Goloboff et al. 2017（*Cladistics* 34: 407–437）
 
-  * 必须大于 0
+  * 必须大于等于 0，若为 0，则自动根据数据选择 K （setk.run 算法）
 
 * `cons` 合意树方式可选 `str`、`mjr`、`hlf`
 
@@ -116,7 +118,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix par,
 
 * `homo.log`：所有性状的趋同信息。
 
-* `report.log`：含 CI、RI、TL 报告。
+* `report.log`：含合意树和最简约树的 CI、RI、TL 报告。
 
 * `winclada.ss`：包含数据矩阵和共识树，可直接由 WinClada 打开。
 
