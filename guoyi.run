@@ -53,6 +53,7 @@ var:
   search
   parstring[5]
   isfas istnt isnex
+  ismole
   isparallel 
   input;
 
@@ -62,6 +63,7 @@ set doew 0; set doiw 0; set doeiw 0; set dowt 0; set wttype 0;
 set kvalue 12;
 set search 0;
 set isfas 0; set istnt 0; set isnex 0;
+set ismole 0;
 
 goto=%0;
 
@@ -208,12 +210,16 @@ xend
 /*Basic settings*/
 taxname+1000;
 taxname=;
-mxram[; mxram*2; /*allocate twice as much RAM as TNT thinks*/
+mxram 10240; /*allocate twice as much RAM as TNT thinks*/
 if(argnumber>=2)
   nstates %2;
+  if ( (eqstring [ %2 dna ]) || (eqstring [ %2 prot ]) )
+    set ismole 1;
+  end  
 else
   nstates 32;
 end
+
 nstates NOGAPS;
 
 /*Set K*/ 
@@ -482,7 +488,7 @@ tsave = %7.original.ctf;
 tsave *= %7.original.tnt.tre;
 
 /*Apomorphic characters*/
-if ('isparallel'==1 || (eqstring [ %2 dna ]) || (eqstring [ %2 prot ]) )
+if ('isparallel'==1 || 'ismole'==1 )
 quote this step (apomorphic characters mapping) is skipped because of parallel mode or DNA/protein data;
 else
 export = %7.winclada.tre;
