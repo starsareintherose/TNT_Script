@@ -120,7 +120,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix par,
 
 * `report.log`：含合意树和最简约树的 CI、RI、TL 报告。
 
-* `winclada.ss`：包含数据矩阵和共识树，可直接由 WinClada 打开。
+* `winclada.ss`：包含数据矩阵和共识树，可直接由 WinClada 打开。( TNT 中默认 ccode 为 nonadditive `-`，但是 WinClada 中默认 ccode 为 additive `+`，因此建议添加 `ccode` 相关指令到到 `winclada.ss` 的 `proc/;` 之前）
 
 * `winclada.tre`：经 `tnt2winclada` 处理后生成，配合 TNT 矩阵文件 `filename` 可在 WinClada 中进行性状映射和趋同分析。（建议直接使用 `winclada.ss`）
 

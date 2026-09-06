@@ -114,7 +114,7 @@ tnt run guoyi.run filename datatype weight 0/K cons resample prefix par,
 
 - `report.log` contains CI RI TL of consensus tree and MPTs.
 
-- `winclada.ss` includes data matrix and consensus tree and it can be read by winclada directly.
+- `winclada.ss` includes data matrix and consensus tree and it can be read by winclada directly. (The default of TNT treats all character nonadditve `ccode - 0 . ntax-1;`, however, Winclada treats all character additive `ccode + ntax-1;`, to fix this, you should add `ccode` relatd code in the `winclada.ss`, before `proc/;` )
 
 - `winclada.tre` can be transferred to the acceptable format for WinClada by tnt2winclada and the output file can be put into Winclada with your tnt matrix file `filename` for mapping apomorphic characters and homoplasy.
 
